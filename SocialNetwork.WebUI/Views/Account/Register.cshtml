@@ -1,0 +1,57 @@
+﻿@model SocialNetwork.WebUI.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+    string pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$";
+}
+
+<h2 class="fw-700 display1-size display2-md-size mb-4">Create <br>your account</h2>
+@if (!string.IsNullOrEmpty((string?) TempData["passErr"]))
+{
+    <div class="alert alert-danger animate__animated animate__backInLeft" role="alert">
+        <label>@TempData["passErr"]</label>
+        <br/>
+        <label>&nbsp;1) At least one capital letter.</label>
+        <br/>
+        <label>&nbsp;2) At least one small letter.</label>
+        <br/>
+        <label>&nbsp;3) At least one digit.</label>
+        <br/>
+        <label>&nbsp;4) At least one specific sign.</label>
+    </div>
+}
+else if(TempData["regErrMsg"]!=null){
+    <div class="alert alert-danger animate__animated animate__backInLeft" role="alert" >@TempData["regErrMsg"]</div>
+}
+<form asp-controller="Account" asp-action="Register" method="post" role="form">
+    <div class="form-group icon-input mb-3">
+        <i class="font-sm ti-user text-grey-500 pe-0"></i>
+        <input asp-for="Username" class="style2-input ps-5 form-control text-grey-900 font-xsss fw-600" placeholder="Your Name">
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group icon-input mb-3">
+        <i class="font-sm ti-email text-grey-500 pe-0"></i>
+        <input asp-for="Email" class="style2-input ps-5 form-control text-grey-900 font-xsss fw-600" placeholder="Your Email Address">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group icon-input mb-3">
+        <i class="font-sm ti-lock text-grey-500 pe-0"></i>
+        <input asp-for="Password" maxlength="16" class="style2-input ps-5 form-control text-grey-900 font-xss ls-3" placeholder="Password">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group icon-input mb-1">
+        <i class="font-sm ti-lock text-grey-500 pe-0"></i>
+        <input asp-for="ConfirmPassword" class="style2-input ps-5 form-control text-grey-900 font-xss ls-3" placeholder="Confirm Password">
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <div class="col-sm-12 p-0 text-left">
+        <div class="form-group mb-1">
+            <input class="form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0 " type="submit" value="Register"/>
+        </div>
+    </div>
+</form>
+<div class="col-sm-12 p-0 text-left">
+    <h6 class="text-grey-500 font-xsss fw-500 mt-0 mb-0 lh-32">Already have account 
+        <a asp-controller="Account" asp-action="Login" class="fw-700 ms-1">Login</a>
+    </h6>
+</div>

@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="utf-8" />
@@ -11,7 +10,7 @@
     <link rel="stylesheet" href="/assets/css/feather.css" />
     <link rel="stylesheet" href="/assets/css/style.css" />
     <link rel="stylesheet" href="/assets/css/emoji.css" />
-    <title>Social Network </title>
+    <title>@ViewBag.Title</title>
     <link href="/static/css/2.ac0685f7.chunk.css" rel="stylesheet" />
     <link href="/static/css/main.1ae2f137.chunk.css" rel="stylesheet" />
 </head>
@@ -21,18 +20,18 @@
         <div class="main-wrap">
             <div class="nav-header bg-transparent shadow-none border-0">
                 <div class="nav-top w-100">
-                    <a asp-controller="Home" asp-action="Index">
+                    <a>
                         <i class="feather-zap text-success display1-size me-2 ms-0"></i>
                         <span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">Social.</span>
                     </a>
                     <button class="nav-menu me-0 ms-auto"></button>
-                    <a asp-controller="Home" asp-action="Login" class="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl">Login</a>
-                    <a asp-controller="Home" asp-action="Register" class="header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl">Register</a>
+                    <a asp-controller="Account" asp-action="Login" class="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl">Login</a>
+                    <a asp-controller="Account" asp-action="Register" class="header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl">Register</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xl-5 d-none d-xl-block p-0 vh-100 bg-image-cover bg-no-repeat" style="background-image: url('/assets/images/login-bg.jpg');"></div>
-                <div class="col-xl-7 vh-100 align-items-center d-flex bg-white rounded-3 overflow-hidden">
+                <div class="col-xl-7 vh-100 align-items-center d-flex bg-white rounded-3" style="overflow-y: hidden; overflow-y: scroll;">
                     <div class="card shadow-none border-0 ms-auto me-auto login-card">
                         <div class="card-body rounded-0 text-left">
                             @RenderBody()
@@ -148,8 +147,6 @@
         })([]);
     </script>
     <script src="static/js/2.82492619.chunk.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="~/js/site.js"></script>
     <!-- <script src="static/js/main.06cafafb.chunk.js"></script> -->
 </body>
 </html>

@@ -1,0 +1,32 @@
+﻿@model SocialNetwork.WebUI.Models.ForgotViewModel
+
+@{
+    ViewBag.Title = "Reset Password";
+}
+
+<h2 class="fw-700 display1-size display2-md-size mb-4">Change <br>your password</h2>
+@if(TempData["forErrMsg"]!=null){
+    <div class="alert alert-danger animate__animated animate__backInLeft" role="alert" >@TempData["forErrMsg"]</div>
+}
+<form asp-controller="Account" asp-action="Forgot" method="post" role="form">
+    <div class="form-group icon-input mb-3">
+        <input asp-for="Username" class="style2-input ps-5 form-control text-grey-900 font-xss ls-3" placeholder="Username">
+        <span asp-validation-for="Username" class="text-danger"></span>
+        <i class="font-sm ti-user text-grey-500 pe-0"></i>
+    </div>
+    <div class="form-group icon-input mb-3">
+        <input asp-for="OldPassword" class="style2-input ps-5 form-control text-grey-900 font-xss ls-3" placeholder="Current Password">
+        <span asp-validation-for="OldPassword" class="text-danger"></span>
+        <i class="font-sm ti-lock text-grey-500 pe-0"></i>
+    </div>
+    <div class="form-group icon-input mb-1">
+        <input asp-for="NewPassword" class="style2-input ps-5 form-control text-grey-900 font-xss ls-3" placeholder="New Password">
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+        <i class="font-sm ti-lock text-grey-500 pe-0"></i>
+    </div>
+    <div class="col-sm-12 p-0 text-left">
+        <div class="form-group mb-1">
+            <input class="form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0 " type="submit" value="Change Password" />
+        </div>
+    </div>
+</form>

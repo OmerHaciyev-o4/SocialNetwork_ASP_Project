@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using SocialNetwork.WebUI.Entities;
 
 namespace SocialNetwork.WebUI.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
+
         public IActionResult Index()
         {
             return View();
@@ -44,18 +49,7 @@ namespace SocialNetwork.WebUI.Controllers
         {
             return View();
         }
-        public IActionResult Login()
-        {
-            return View();
-        }
-        public IActionResult Register()
-        {
-            return View();
-        }
-        public IActionResult Forgot()
-        {
-            return View();
-        }
+
         [HttpGet]
         public IActionResult SearchResult()
         {
