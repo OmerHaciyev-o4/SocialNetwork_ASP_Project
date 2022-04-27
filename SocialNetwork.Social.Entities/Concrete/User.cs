@@ -12,6 +12,7 @@ namespace SocialNetwork.Social.Entities.Concrete
     {
         public int Id { get; set; }
         public string ImageUrl { get; set; }
+        public string BgImageURL { get; set; }
         public string FirstName { get; set; }
         public string Lastname { get; set; }
         [Required]
@@ -26,6 +27,7 @@ namespace SocialNetwork.Social.Entities.Concrete
         public string Password { get; set; }
         public int Follow { get; set; }
         public int Following { get; set; }
+        public bool IsLogined { get; set; }
 
     }
 }

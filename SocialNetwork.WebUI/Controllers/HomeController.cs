@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Business.Abstract;
 using SocialNetwork.Social.Entities.Concrete;
 using SocialNetwork.WebUI.Entities;
+using SocialNetwork.WebUI.Helpers;
 using SocialNetwork.WebUI.Models;
 
 namespace SocialNetwork.WebUI.Controllers
@@ -12,24 +16,36 @@ namespace SocialNetwork.WebUI.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        public static User User { get; set; }
         private UserManager<CustomIdentityUser> _userManager;
         private RoleManager<CustomIdentityRole> _roleManager;
         private SignInManager<CustomIdentityUser> _signInManager;
         private IUserService _userService;
+        private IWebHostEnvironment _webHost;
 
 
-        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService)
+        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _userService = userService;
+            _webHost = webHost;
+
+            User = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
+            Thread th = new Thread(() =>
+            {
+                TempData["userImg"] = User.ImageUrl;
+            });
+            //Response.Cookies.Append("userImg", User.ImageUrl);
         }
 
 
 
         public IActionResult Index()
         {
+            
+
             return View();
         }
         public IActionResult Badges()
@@ -63,7 +79,7 @@ namespace SocialNetwork.WebUI.Controllers
         {
             var model = new AccountViewModel
             {
-                User = _userService.GetByUsername("omer.04")
+                User = HomeController.User
             };
 
             return View(model);
@@ -71,67 +87,115 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpPost]
         public IActionResult AccountInformation(AccountViewModel model, User user)
         {
-            CustomIdentityUser currentUser = null;
-            foreach (var customIdentityUser in _userManager.Users)
+            User currentUserDb = User;
+
+            if (currentUserDb != null)
             {
-                if (customIdentityUser.UserName == user.Username)
+                CustomIdentityUser currentUser = null;
+                foreach (var customIdentityUser in _userManager.Users)
                 {
-                    currentUser = customIdentityUser;
-                    break;
+                    if (customIdentityUser.UserName == currentUserDb.Username)
+                    {
+                        currentUser = customIdentityUser;
+                        break;
+                    }
+                }
+
+                if (currentUser != null)
+                {
+                    if (model.User.Email != currentUserDb.Email)
+                        currentUser.Email = model.User.Email;
+
+                    _signInManager.UserManager.UpdateAsync(currentUser);
+
+                    if (model.User.FirstName != currentUserDb.FirstName)
+                        currentUserDb.FirstName = model.User.FirstName;
+
+                    if (model.User.Lastname != currentUserDb.Lastname)
+                        currentUserDb.Lastname = model.User.Lastname;
+
+                    if (model.User.Email != currentUserDb.Email)
+                        currentUserDb.Email = model.User.Email;
+
+                    if (model.User.Address != currentUserDb.Address)
+                        currentUserDb.Address = model.User.Address;
+
+                    if (model.User.Country != currentUserDb.Country)
+                        currentUserDb.Country = model.User.Country;
+
+                    if (model.User.Description != currentUserDb.Description)
+                        currentUserDb.Description = model.User.Description;
+
+                    if (model.User.PhoneNumber != currentUserDb.PhoneNumber)
+                        currentUserDb.PhoneNumber = model.User.PhoneNumber;
+
+                    if (model.User.TownOrCity != currentUserDb.TownOrCity)
+                        currentUserDb.TownOrCity = model.User.TownOrCity;
+
+                    if (model.User.PostCode != currentUserDb.PostCode)
+                        currentUserDb.PostCode = model.User.PostCode;
+
+                    if (model.File != null)
+                        currentUserDb.ImageUrl = ImageHelper.GetURL(_webHost, model.File, currentUserDb.Id, "front");
+
+                    _userService.Update(currentUserDb);
+                    User = currentUserDb;
+
+                    TempData["setSuccMsg"] = "Your information has been successfully updated.";
+                    TempData["userImg"] = currentUserDb.ImageUrl;
+
+                    return RedirectToAction("settings");
                 }
             }
 
-            if (currentUser != null)
-            {
-                if (model.User.Email != user.Email)
-                    currentUser.Email = model.User.Email;
-
-                _signInManager.UserManager.UpdateAsync(currentUser);
-
-                var currentUserDB = _userService.GetByUsername(user.Username);
-
-                if (currentUserDB != null)
-                {
-                    if (model.User.FirstName != user.FirstName)
-                        currentUserDB.FirstName = model.User.FirstName;
-                    
-                    if (model.User.Lastname != user.Lastname)
-                        currentUserDB.Lastname = model.User.Lastname;
-
-                    if (model.User.Email != user.Email)
-                        currentUserDB.Email = model.User.Email;
-
-                    if (model.User.Address != user.Address)
-                        currentUserDB.Address = model.User.Address;
-
-                    if (model.User.Country != user.Country)
-                        currentUserDB.Country = model.User.Country;
-
-                    if (model.User.Description != user.Description)
-                        currentUserDB.Description = model.User.Description;
-
-                    if (model.User.PhoneNumber != user.PhoneNumber)
-                        currentUserDB.PhoneNumber = model.User.PhoneNumber;
-                    
-                    if (model.User.TownOrCity != user.TownOrCity)
-                        currentUserDB.TownOrCity = model.User.TownOrCity;
-                    
-                    if (model.User.PostCode != user.PostCode)
-                        currentUserDB.PostCode = model.User.PostCode;
-                    
-                    _userService.Update(currentUserDB);
-
-                    TempData["setSuccMsg"] = "All your information has changed.";
-                    RedirectToAction("settings");
-                }
-            }
             return View(model);
         }
 
 
+        [HttpGet]
         public IActionResult ResetPassword()
         {
-            return View();
+            return View(new ChangePasswordViewModel() { CurrentPassowrd = User.Password });
+        }
+        [HttpPost]
+        public IActionResult ResetPassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.ChangePassword != model.ConfirmChangePassword)
+                {
+                    TempData.Add("resErrMsg", "Passwords are not the same.\nPlease enter correct password");
+                    return View(model);
+                }
+                CustomIdentityUser user = null;
+                foreach (var customIdentityUser in _userManager.Users)
+                {
+                    if (customIdentityUser.UserName == User.Username)
+                    {
+                        user = customIdentityUser;
+                        break;
+                    }
+                }
+
+                if (user != null)
+                {
+                    try
+                    {
+                        _userManager.ChangePasswordAsync(user, model.CurrentPassowrd, model.ChangePassword);
+                        TempData["setSuccMsg"] = "Your password has been changed successfully.";
+                        return RedirectToAction("Settings");
+                    }
+                    catch (Exception)
+                    {
+                        TempData["passErr"] = "Please enter:";
+                        model.ChangePassword = "";
+                        model.ConfirmChangePassword = "";
+                        return View(model);
+                    }
+                }
+            }
+
+            return View(model);
         }
         public IActionResult Notification()
         {

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SocialNetwork.WebUI.Controllers
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -77,7 +78,16 @@
             <span class="pointer p-2 text-center ms-3 menu-icon chat-active-btn" id="appMode">
                 <i class="feather-moon font-xl text-current" id="appModeIcon"></i>
             </span>
-            <a class="p-0 ms-3 menu-icon" asp-controller="Home" asp-action="Settings"><img src="/assets/images/profile-4.png" alt="user" class="w40 mt--1"></a>
+            <a class="p-0 ms-3 menu-icon" asp-controller="Home" asp-action="Settings">
+                @if (HomeController.User.ImageUrl == "")
+                {
+                    <img src="/assets/images/defaultImage.png" alt="user" class="w40 mt--1">
+                }
+                else
+                {
+                    <img src="/images/@HomeController.User.ImageUrl" alt="user" class="w40 mt--1">
+                }
+            </a>
             <nav class="navigation scroll-bar ">
                 <div class="container ps-0 pe-0">
                     <div class="nav-content">
@@ -161,35 +171,35 @@
                     <h4 class="font-xsssss text-grey-500 text-uppercase fw-700 ls-3">CONTACTS</h4>
                     <ul class="list-group list-group-flush">
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-8.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-8.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Hurin Seary</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-7.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-7.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Victor Exrixon</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-6.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-6.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Surfiya Zakir</span></h3><span class="bg-warning ms-auto btn-round-xss"></span>
                         </li>
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-5.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-5.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Goria Coast</span></h3><span class="bg-danger ms-auto btn-round-xss"></span>
                         </li>
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-4.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-4.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Hurin Seary</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-3.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-3.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">David Goria</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-2.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-2.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Seary Victor</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="assets/images/user-12.png" alt="avater" class="w35"></figure>
+                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-12.png" alt="avater" class="w35"></figure>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Ana Seary</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                     </ul>
@@ -229,7 +239,7 @@
                 <div class="modal-popup-wrap bg-white p-0 shadow-lg rounded-3">
                     <div class="modal-popup-header w-100 border-bottom">
                         <div class="card p-3 d-block border-0 d-block">
-                            <figure class="avatar mb-0 float-left me-2"><img src="assets/images/user-12.png" alt="avater" class="w35 me-1"></figure>
+                            <figure class="avatar mb-0 float-left me-2"><img src="/assets/images/user-12.png" alt="avater" class="w35 me-1"></figure>
                             <h5 class="fw-700 text-primary font-xssss mt-1 mb-1">Hendrix Stamp</h5>
                             <h4 class="text-grey-500 font-xsssss mt-0 mb-0"><span class="d-inline-block bg-success btn-round-xss m-0"></span> Available</h4>
                             <div class="font-xssss position-absolute right-0 top-0 mt-3 me-4 pointer"><i class="ti-close text-grey-900 mt-2 d-inline-block"></i></div>
@@ -264,7 +274,16 @@
         <div></div>
         <div class="app-footer border-0 shadow-lg bg-primary-gradiant">
             <a class="nav-content-bttn nav-center" href="/home"><i class="feather-home"></i></a><a class="nav-content-bttn" href="/defaultvideo"><i class="feather-package"></i></a><a class="nav-content-bttn" data-tab="chats" href="/defaultlive"><i class="feather-layout"></i></a>
-            <a class="nav-content-bttn" asp-controller="Home" asp-action="Settings"><img src="/assets/images/female-profile.png" alt="user" class="w30 shadow-xss"></a>
+            <a class="nav-content-bttn" asp-controller="Home" asp-action="Settings">
+                @if (HomeController.User.ImageUrl == "")
+                {
+                    <img src="/assets/images/defaultImage.png" alt="user" class="w30 shadow-xss">
+                }
+                else
+                {
+                    <img src="/images/@HomeController.User.ImageUrl" alt="user" class="w30 shadow-xss">
+                }
+            </a>
         </div>
     </div>
     <script>

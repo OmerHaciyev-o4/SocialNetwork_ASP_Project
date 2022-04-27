@@ -44,7 +44,17 @@ namespace SocialNetwork.WebUI.Controllers
 
         public IActionResult LogOff()
         {
-            _signInManager.SignOutAsync().Wait();
+            try
+            {
+                _signInManager.SignOutAsync().Wait();
+                User user = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
+                if (user != null)
+                {
+                    user.IsLogined = false;
+                    _userService.Update(user);
+                }
+            }catch (Exception) { }
+
             return RedirectToAction("Login");
         }
 
@@ -105,6 +115,17 @@ namespace SocialNetwork.WebUI.Controllers
                     model.Password, model.RememberMe, false).Result;
                 if (result.Succeeded)
                 {
+                    User user = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
+                    if (user != null)
+                    {
+                        user.IsLogined = false;
+                        _userService.Update(user);
+                    }
+
+                    user = _userService.GetByUsername(model.Username);
+                    user.IsLogined = true;
+                    _userService.Update(user);
+
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -136,7 +157,10 @@ namespace SocialNetwork.WebUI.Controllers
                     }
 
                     CustomIdentityUser userIdentity = new CustomIdentityUser
-                    { UserName = model.Username, Email = model.Email };
+                    {
+                        UserName = model.Username,
+                        Email = model.Email
+                    };
 
                     IdentityResult result = _userManager.CreateAsync(userIdentity, model.Password).Result;
                     if (result.Succeeded)

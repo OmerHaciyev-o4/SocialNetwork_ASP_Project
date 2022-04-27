@@ -16,15 +16,18 @@
                                     <div class="col-lg-4 text-center">
                                         <figure class="avatar ms-auto me-auto mb-0 mt-2 w100">
                                             <button type="button" class="btn-close" aria-label="Close" id="deleteChangedImg"></button>
-                                            @if (!string.IsNullOrEmpty(Model.User.ImageUrl)) { <img id="mainImg" src="/assets/images/pt-1.jpg" alt="avater" class="shadow-sm rounded-3 w-100"> }
-                                            else { <img id="mainImg" src="/assets/images/defaultImage.png" alt="avater" class="shadow-sm rounded-3 w-100"> }
+                                            @if (string.IsNullOrEmpty(Model.User.ImageUrl)) { <img id="mainImg" src="/assets/images/defaultImage.png" alt="avater" class="shadow-sm rounded-3 w-100"> }
+                                            else { <img id="mainImg" src="/images/@Model.User.ImageUrl" alt="avater" class="shadow-sm rounded-3 w-100"> }
                                         </figure>
-                                        @if (Model.User.FirstName != "" && Model.User.Lastname != "") { <h2 class="fw-700 font-sm text-grey-900 mt-3">@Model.User.Username</h2> }
-                                        else { <h2 class="fw-700 font-sm text-grey-900 mt-3">@Model.User.FirstName @Model.User.Lastname</h2> }
+                                        @if (string.IsNullOrEmpty(Model.User.FirstName) && string.IsNullOrEmpty(Model.User.Lastname)){ <h2 class="fw-700 font-sm text-grey-900 mt-3">@Model.User.Username</h2> }
+                                        else
+                                        {
+                                            <h2 class="fw-700 font-sm text-grey-900 mt-3">@Model.User.FirstName @Model.User.Lastname</h2>
+                                        }
                                         <h4 class="text-grey-500 fw-500 mb-3 font-xsss mb-4">@Model.User.Username</h4>
                                     </div>
                                 </div>
-                                <form asp-controller="Home" asp-action="AccountInformation" asp-route-user="@Model.User" method="post" role="form">
+                                <form asp-controller="Home" asp-action="AccountInformation" asp-route-user="@Model.User" method="post" role="form" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-lg-6 mb-3">
                                             <div class="form-group">
