@@ -4,6 +4,8 @@ namespace SocialNetwork.WebUI.Models
 {
     public class ChangePasswordViewModel
     {
+        public string Usrname { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         public string CurrentPassowrd { get; set; }

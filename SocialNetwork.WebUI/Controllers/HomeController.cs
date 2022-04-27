@@ -33,11 +33,6 @@ namespace SocialNetwork.WebUI.Controllers
             _webHost = webHost;
 
             User = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
-            Thread th = new Thread(() =>
-            {
-                TempData["userImg"] = User.ImageUrl;
-            });
-            //Response.Cookies.Append("userImg", User.ImageUrl);
         }
 
 
@@ -142,7 +137,6 @@ namespace SocialNetwork.WebUI.Controllers
                     User = currentUserDb;
 
                     TempData["setSuccMsg"] = "Your information has been successfully updated.";
-                    TempData["userImg"] = currentUserDb.ImageUrl;
 
                     return RedirectToAction("settings");
                 }
@@ -155,7 +149,7 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpGet]
         public IActionResult ResetPassword()
         {
-            return View(new ChangePasswordViewModel() { CurrentPassowrd = User.Password });
+            return View();
         }
         [HttpPost]
         public IActionResult ResetPassword(ChangePasswordViewModel model)
@@ -188,8 +182,6 @@ namespace SocialNetwork.WebUI.Controllers
                     catch (Exception)
                     {
                         TempData["passErr"] = "Please enter:";
-                        model.ChangePassword = "";
-                        model.ConfirmChangePassword = "";
                         return View(model);
                     }
                 }
@@ -197,6 +189,7 @@ namespace SocialNetwork.WebUI.Controllers
 
             return View(model);
         }
+        
         public IActionResult Notification()
         {
             return View();
