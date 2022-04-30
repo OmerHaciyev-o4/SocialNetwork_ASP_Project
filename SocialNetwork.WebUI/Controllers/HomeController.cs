@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +24,7 @@ namespace SocialNetwork.WebUI.Controllers
         private SignInManager<CustomIdentityUser> _signInManager;
         private IUserService _userService;
         private IWebHostEnvironment _webHost;
+        private Cloudinary _cloudinary;
 
 
         public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost)
@@ -33,14 +36,13 @@ namespace SocialNetwork.WebUI.Controllers
             _webHost = webHost;
 
             User = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
+            var myAccount = new Account(apiKey: "392371254347452", apiSecret: "7qwJgIJnuMdrYhtOVgj4TxQ2yNQ", cloud: "social-network-web");
+            _cloudinary = new Cloudinary(myAccount);
         }
-
 
 
         public IActionResult Index()
         {
-            
-
             return View();
         }
         public IActionResult Badges()
@@ -131,7 +133,25 @@ namespace SocialNetwork.WebUI.Controllers
                         currentUserDb.PostCode = model.User.PostCode;
 
                     if (model.File != null)
-                        currentUserDb.ImageUrl = ImageHelper.GetURL(_webHost, model.File, currentUserDb.Id, "front");
+                    {
+                        if (!string.IsNullOrEmpty(currentUserDb.ImageUrl))
+                        {
+                            var result = _cloudinary.DestroyAsync(new DeletionParams(currentUserDb.ImageUrl.Split('/')[7].Split('.')[0])
+                            {
+                                ResourceType = ResourceType.Image
+                            }).Result;
+                        }
+
+                        string imgPath = ImageHelper.GetURL(_webHost, model.File, currentUserDb.Id, "front");
+
+                        var uploadImage = new ImageUploadParams()
+                        {
+                            File = new FileDescription(imgPath)
+                        };
+
+                        currentUserDb.ImageUrl = _cloudinary.Upload(uploadImage).Url.ToString();
+                        System.IO.File.Delete(imgPath);
+                    }
 
                     _userService.Update(currentUserDb);
                     User = currentUserDb;
@@ -189,21 +209,16 @@ namespace SocialNetwork.WebUI.Controllers
 
             return View(model);
         }
-        
+
         public IActionResult Notification()
         {
             return View();
         }
 
-        [HttpGet]
-        public IActionResult SearchResult()
-        {
-            return View();
-        }
         [HttpPost]
         public IActionResult SearchResult(string data)
         {
-            return RedirectToAction("SearchResult");
+            return View(data);
         }
         public IActionResult GroupView()
         {

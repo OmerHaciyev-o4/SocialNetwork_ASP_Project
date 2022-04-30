@@ -28,6 +28,5 @@ namespace SocialNetwork.Social.Entities.Concrete
         public int Follow { get; set; }
         public int Following { get; set; }
         public bool IsLogined { get; set; }
-
     }
 }

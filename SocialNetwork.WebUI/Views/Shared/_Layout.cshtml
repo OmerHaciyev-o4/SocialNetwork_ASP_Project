@@ -23,34 +23,46 @@
     <div>
         <div class="nav-header bg-white shadow-xs border-0">
             <div class="nav-top">
-                <a href="/">
+                @*TODO: Logo*@
+                <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
                     <i class="feather-zap text-success display2-size me-3 ms-0"></i>
-                    <span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">Social. </span>
+                    <span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">Social.</span>
                 </a>
+
+                @*TODO: No desktop layout time showed Chat panel icon*@
                 <a class="mob-menu ms-auto me-2 chat-active-btn" asp-controller="Home" asp-action="Chat">
                     <i class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i>
                 </a>
-                <a class="mob-menu me-2" asp-controller="Home" asp-action="Videos">
-                    <i class="feather-video text-grey-900 font-sm btn-round-md bg-greylight"></i>
-                </a>
-                <span class="me-2 menu-search-icon mob-menu">
+                
+                @*TODO: small search panel icon*@
+                <span class="me-2 menu-search-icon mob-menu" style="cursor: pointer;" id="noDesktopSearch">
                     <i class="feather-search text-grey-900 font-sm btn-round-md bg-greylight"></i>
                 </span>
-                <button class="nav-menu me-0 ms-2 "></button>
+
+                @*TODO: No desktop layout time showed Another panels and buttons show icon*@
+                <button class="nav-menu me-0 ms-2 " id="leftSideBarBtn"></button>
             </div>
+
+            @*TODO: Search panel*@
             <div class="float-left header-search ms-3">
                 <div class="form-group mb-0 icon-input">
                     <i class="feather-search font-sm text-grey-400"></i>
-                    <input type="text" placeholder="Start typing to search.." class="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg" id="searchPanel">
+                    <input type="text" placeholder="Start typing to search..." class="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg" id="searchPanel">
                 </div>
             </div>
+
+            @*TODO: Specific buttons transitions*@
             <a class="p-2 text-center ms-3 menu-icon center-menu-icon" asp-controller="Home" asp-action="Index"><i class="feather-home font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500 "></i></a>
             <a class="p-2 text-center ms-0 menu-icon center-menu-icon" asp-controller="Home" asp-action="Stories"><i class="feather-zap font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500 "></i></a><a class="p-2 text-center ms-0 menu-icon center-menu-icon" asp-controller="Home" asp-action="Videos"><i class="feather-video font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500 "></i></a>
             <a class="p-2 text-center ms-0 menu-icon center-menu-icon" asp-controller="Home" asp-action="Group"><i class="feather-user font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500 "></i></a>
+
+            @*TODO: Notification Button (Current time not. show or hide for)*@
             <span class="p-2 pointer text-center ms-auto menu-icon " id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="dot-count bg-warning"></span>
                 <i class="feather-bell font-xl text-current"></i>
             </span>
+
+            @*TODO: Notification Panel (c. t. not. panel)*@
             <div class="dropdown-menu notification-dropdown p-4 right-0 rounded-xxl border-0 shadow-lg " aria-labelledby="dropdownMenu3" id="notificationID">
                 <h4 class="fw-700 font-xss mb-4">Notification</h4>
                 <div class="card bg-transparent-card w-100 border-0 ps-5 mb-3">
@@ -74,77 +86,104 @@
                     <h6 class="text-grey-500 fw-500 font-xssss lh-4">Mobile Apps UI Designer is require..</h6>
                 </div>
             </div>
-            <a class="p-2 text-center ms-3 menu-icon chat-active-btn" asp-controller="Home" asp-action="Chat"><i class="feather-message-square font-xl text-current"></i></a>
+
+            @*TODO: Chat panel icon*@
+            <a class="p-2 text-center ms-3 menu-icon chat-active-btn text-decoration-none" asp-controller="Home" asp-action="Chat">
+                <i class="feather-message-square font-xl text-current"></i>
+            </a>
+
+            @*TODO: App mode icon*@
             <span class="pointer p-2 text-center ms-3 menu-icon chat-active-btn" id="appMode">
                 <i class="feather-moon font-xl text-current" id="appModeIcon"></i>
             </span>
+            
+            @*TODO: Desktop layout active time user img and transition Settings panel*@
             <a class="p-0 ms-3 menu-icon" asp-controller="Home" asp-action="Settings">
-                @if (HomeController.User.ImageUrl == "")
+                @if (string.IsNullOrEmpty(HomeController.User.ImageUrl))
                 {
-                    <img src="/assets/images/defaultImage.png" alt="user" class="w40 mt--1">
+                    <img src="/assets/images/defaultImage.png" alt="@HomeController.User.Username Image" class="w40 mt--1 rounded-xxxl">
                 }
                 else
                 {
-                    <img src="/images/@HomeController.User.ImageUrl" alt="user" class="w40 mt--1">
+                    <img src="@HomeController.User.ImageUrl" alt="@HomeController.User.Username Image" class="w40 mt--1 rounded-xxxl">
                 }
             </a>
-            <nav class="navigation scroll-bar ">
+            
+            @*TODO: Left sidebar panel*@
+            <nav class="navigation scroll-bar " id="leftSideBar">
                 <div class="container ps-0 pe-0">
                     <div class="nav-content">
+                        @*TODO: D.L left first panel*@
                         <div class="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2 mt-2">
-                            <div class="nav-caption fw-600 font-xssss text-grey-500"><span>New </span>Feeds</div>
+                            <div class="nav-caption fw-600 font-xssss text-grey-500"><span>Main </span>Panel</div>
                             <ul class="mb-1 top-content">
                                 <li class="logo d-none d-xl-block d-lg-block"></li>
-                                <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Index"><i class="feather-tv btn-round-md bg-blue-gradiant me-3"></i><span>Newsfeed</span></a></li>
-                                <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Badges"><i class="feather-award btn-round-md bg-red-gradiant me-3"></i><span>Badges</span></a></li>
-                                <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Stories"><i class="feather-globe btn-round-md bg-gold-gradiant me-3"></i><span>Explore Stories</span></a></li>
-                                <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Group"><i class="feather-zap btn-round-md bg-mini-gradiant me-3"></i><span>Popular Groups</span></a></li>
-                                <li><a class="nav-content-bttn open-font" href="/userpage"><i class="feather-video btn-round-md bg-primary-gradiant me-3"></i><span>Create Live </span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Index"><i class="feather-tv btn-round-md bg-blue-gradiant me-3"></i><span>Home</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Stories"><i class="feather-globe btn-round-md bg-gold-gradiant me-3"></i><span>Stories</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Group"><i class="feather-zap btn-round-md bg-mini-gradiant me-3"></i><span>Groups</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Profile"><i class="feather-user btn-round-md bg-blue-gradiant me-3"></i><span>Profile</span></a></li>
                             </ul>
                         </div>
+
+                        @*TODO: D.L left second panel but disable*@
                         <div class="d-none nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2">
                             <div class="nav-caption fw-600 font-xssss text-grey-500"><span>More </span>Pages</div>
                             <ul class="mb-3">
-                                <li><a class="nav-content-bttn open-font" href="/defaultemailbox"><i class="font-xl text-current feather-inbox me-3"></i><span>Email Box</span><span class="circle-count bg-warning mt-1">584</span></a></li>
-                                <li><a class="nav-content-bttn open-font" href="/defaulthotel"><i class="font-xl text-current feather-home me-3"></i><span>Near Hotel</span></a></li>
-                                <li><a class="nav-content-bttn open-font" href="/defaultevent"><i class="font-xl text-current feather-map-pin me-3"></i><span>Latest Event</span></a></li>
-                                <li><a class="nav-content-bttn open-font" href="/defaultlive"><i class="font-xl text-current feather-youtube me-3"></i><span>Live Stream</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" href="/defaultemailbox"><i class="font-xl text-current feather-inbox me-3"></i><span>Email Box</span><span class="circle-count bg-warning mt-1">584</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" href="/defaulthotel"><i class="font-xl text-current feather-home me-3"></i><span>Near Hotel</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" href="/defaultevent"><i class="font-xl text-current feather-map-pin me-3"></i><span>Latest Event</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" href="/defaultlive"><i class="font-xl text-current feather-youtube me-3"></i><span>Live Stream</span></a></li>
                             </ul>
                         </div>
+
+                        @*TODO: D.L left third panel*@
                         <div class="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1">
                             <div class="nav-caption fw-600 font-xssss text-grey-500"><span></span> Account</div>
                             <ul class="mb-1">
                                 <li class="logo d-none d-xl-block d-lg-block"></li>
-                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Settings"><i class="font-sm feather-settings me-3 text-grey-500"></i><span>Settings</span></a></li>
-                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Notification"><i class="font-sm feather-bell me-3 text-grey-500"></i><span>Notification</span></a></li>
-                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Chat"><i class="font-sm feather-message-square me-3 text-grey-500"></i><span>Chat</span><span class="circle-count bg-warning mt-0">23</span></a></li>
-                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Help"><i class="font-sm feather-help-circle me-3 text-grey-500"></i><span>Help</span></a></li>
+                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2 text-decoration-none" asp-controller="Home" asp-action="Settings"><i class="font-sm feather-settings me-3 text-grey-500"></i><span>Settings</span></a></li>
+                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2 text-decoration-none" asp-controller="Home" asp-action="Notification"><i class="font-sm feather-bell me-3 text-grey-500"></i><span>Notification</span></a></li>
+                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2 text-decoration-none" asp-controller="Home" asp-action="Chat"><i class="font-sm feather-message-square me-3 text-grey-500"></i><span>Chat</span><span class="circle-count bg-warning mt-0">23</span></a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </nav>
-            <div class="app-header-search ">
-                <form class="search-form">
-                    <div class="form-group searchbox mb-0 border-0 p-1"><input type="text" class="form-control border-0" placeholder="Search..."><i class="input-icon"><ion-icon name="search-outline" role="img" classname="md hydrated" aria-label="search outline"></ion-icon></i><span class="ms-1 mt-1 d-inline-block close searchbox-close"><i class="ti-close font-xs"></i></span></div>
-                </form>
+
+            @*TODO: small search panel*@
+            <div class="app-header-search" id="smallSearchPanel">
+                <div class="search-form">
+                    <div class="form-group searchbox mb-0 border-0 p-1">
+                        <input type="text" class="form-control border-0" placeholder="Start typing to search..." id="smallSearch">
+                        <i class="input-icon">
+                            <ion-icon name="search-outline" role="img" classname="md hydrated" aria-label="search outline"></ion-icon>
+                        </i>
+                        <span class="ms-1 mt-1 d-inline-block close searchbox-close" id="smallSearchCloseBtn" style="cursor: pointer;">
+                            <i class="ti-close font-xs"></i>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="navigation scroll-bar">
             <div class="container ps-0 pe-0">
                 <div class="nav-content">
+                    @*TODO: D.L left first panel*@
                     <div class="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2 mt-2">
-                        <div class="nav-caption fw-600 font-xssss text-grey-500"><span>New </span>Feeds</div>
+                        <div class="nav-caption fw-600 font-xssss text-grey-500"><span>Main </span>Panel</div>
                         <ul class="mb-1 top-content">
                             <li class="logo d-none d-xl-block d-lg-block"></li>
                             <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Index"><i class="feather-tv btn-round-md bg-blue-gradiant me-3"></i><span>Newsfeed</span></a></li>
                             <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Badges"><i class="feather-award btn-round-md bg-red-gradiant me-3"></i><span>Badges</span></a></li>
                             <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Stories"><i class="feather-globe btn-round-md bg-gold-gradiant me-3"></i><span>Explore Stories</span></a></li>
                             <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Group"><i class="feather-zap btn-round-md bg-mini-gradiant me-3"></i><span>Popular Groups</span></a></li>
-                            <li><a class="nav-content-bttn open-font" href="/userpage"><i class="feather-user btn-round-md bg-primary-gradiant me-3"></i><span>Author Profile </span></a></li>
+                            <li><a class="nav-content-bttn open-font" href="/userpage"><i class="feather-video btn-round-md bg-primary-gradiant me-3"></i><span>Create Live </span></a></li>
+                            <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="AuthorProfile"><i class="feather-user btn-round-md bg-primary-gradiant me-3"></i><span>Author Profile </span></a></li>
                         </ul>
                     </div>
-                    <div class="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2">
+
+                    @*TODO: D.L left second panel but disable*@
+                    <div class="d-none nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2">
                         <div class="nav-caption fw-600 font-xssss text-grey-500"><span>More </span>Pages</div>
                         <ul class="mb-3">
                             <li><a class="nav-content-bttn open-font" href="/defaultemailbox"><i class="font-xl text-current feather-inbox me-3"></i><span>Email Box</span><span class="circle-count bg-warning mt-1">584</span></a></li>
@@ -153,19 +192,22 @@
                             <li><a class="nav-content-bttn open-font" href="/defaultlive"><i class="font-xl text-current feather-youtube me-3"></i><span>Live Stream</span></a></li>
                         </ul>
                     </div>
+
+                    @*TODO: D.L left third panel*@
                     <div class="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1">
                         <div class="nav-caption fw-600 font-xssss text-grey-500"><span></span> Account</div>
                         <ul class="mb-1">
                             <li class="logo d-none d-xl-block d-lg-block"></li>
                             <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Settings"><i class="font-sm feather-settings me-3 text-grey-500"></i><span>Settings</span></a></li>
-                            <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" href="/defaultanalytics"><i class="font-sm feather-pie-chart me-3 text-grey-500"></i><span>Analytics</span></a></li>
+                            <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Notification"><i class="font-sm feather-bell me-3 text-grey-500"></i><span>Notification</span></a></li>
                             <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Chat"><i class="font-sm feather-message-square me-3 text-grey-500"></i><span>Chat</span><span class="circle-count bg-warning mt-0">23</span></a></li>
+                            <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2" asp-controller="Home" asp-action="Help"><i class="font-sm feather-help-circle me-3 text-grey-500"></i><span>Help</span></a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="main-content-wrap" class="right-chat nav-wrap mt-2 right-scroll-bar  ">
+        <div id="main-content-wrap" class="right-chat nav-wrap mt-2 right-scroll-bar">
             <div class="middle-sidebar-right-content bg-white shadow-xss rounded-xxl">
                 <div class="section full pe-3 ps-4 pt-4 position-relative feed-body">
                     <h4 class="font-xsssss text-grey-500 text-uppercase fw-700 ls-3">CONTACTS</h4>
@@ -272,16 +314,25 @@
             @RenderBody()
         </div>
         <div></div>
+        @*TODO: Mobile or Table mode time footer panel*@
         <div class="app-footer border-0 shadow-lg bg-primary-gradiant">
-            <a class="nav-content-bttn nav-center" href="/home"><i class="feather-home"></i></a><a class="nav-content-bttn" href="/defaultvideo"><i class="feather-package"></i></a><a class="nav-content-bttn" data-tab="chats" href="/defaultlive"><i class="feather-layout"></i></a>
-            <a class="nav-content-bttn" asp-controller="Home" asp-action="Settings">
-                @if (HomeController.User.ImageUrl == "")
+            <a class="nav-content-bttn nav-center text-decoration-none" asp-controller="Home" asp-action="Index">
+                <i class="feather-home"></i>
+            </a>
+            <a class="nav-content-bttn text-decoration-none" asp-controller="Home" asp-action="Videos">
+                <i class="feather-video"></i>
+            </a>
+            <a class="nav-content-bttn text-decoration-none" asp-controller="Home" asp-action="Stories">
+                <i class="feather-zap"></i>
+            </a>
+            <a class="nav-content-bttn text-decoration-none" asp-controller="Home" asp-action="Settings">
+                @if (string.IsNullOrEmpty(HomeController.User.ImageUrl))
                 {
-                    <img src="/assets/images/defaultImage.png" alt="user" class="w30 shadow-xss">
+                    <img src="/assets/images/defaultImage.png" alt="@HomeController.User.Username Image" class="w30 shadow-xss rounded-xxxl">
                 }
                 else
                 {
-                    <img src="/images/@HomeController.User.ImageUrl" alt="user" class="w30 shadow-xss">
+                    <img src="@HomeController.User.ImageUrl" alt="@HomeController.User.Username Image" class="w30 shadow-xss rounded-xxxl">
                 }
             </a>
         </div>
@@ -389,10 +440,9 @@
             a();
         })([]);
     </script>
-    <script src="static/js/2.82492619.chunk.js"></script>
+    <script src="~/static/js/2.82492619.chunk.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="~/js/site.js"></script>
-    <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
-    <!-- <script src="static/js/main.06cafafb.chunk.js"></script> -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
 </body>
 </html>

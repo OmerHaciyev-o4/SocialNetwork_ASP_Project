@@ -53,7 +53,8 @@ namespace SocialNetwork.WebUI.Controllers
                     user.IsLogined = false;
                     _userService.Update(user);
                 }
-            }catch (Exception) { }
+            }
+            catch (Exception) { }
 
             return RedirectToAction("Login");
         }
@@ -183,8 +184,8 @@ namespace SocialNetwork.WebUI.Controllers
                         {
                             FirstName = "",
                             Lastname = "",
-                            Username = model.Username, 
-                            Password = model.Password, 
+                            Username = model.Username,
+                            Password = model.Password,
                             Email = model.Email
                         };
 

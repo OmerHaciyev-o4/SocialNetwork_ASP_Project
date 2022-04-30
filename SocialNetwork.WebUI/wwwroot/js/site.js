@@ -1,47 +1,41 @@
-﻿var mainImgPath = "";
-var isWriteMainPath = false;
+﻿window.addEventListener('resize', function (e) {
+    window.innerWidth > 1600
+        ? document.getElementById('main-content-wrap').classList.add('active-sidebar')
+        : document.getElementById('main-content-wrap').classList.remove('active-sidebar');
+});
 
-var previewImg = function (event) {
-    var result = document.getElementById("mainImg");
-    if (!isWriteMainPath) {
-        isWriteMainPath = true;
-        mainImgPath = result.src.toString();
-        console.log(mainImgPath);
-        $('#deleteChangedImg').show();
-    }
-    result.src = URL.createObjectURL(event.target.files[0]);
-};
+document.getElementById('noDesktopSearch').onclick = function () {
+    document.getElementById('smallSearchPanel').classList.add('show');
+}
+document.getElementById('smallSearchCloseBtn').onclick = function() {
+    document.getElementById('smallSearchPanel').classList.remove('show');
+}
 
-$(document).ready(function () {
-    $('#deleteChangedImg').hide();
-    
-    $('#deleteChangedImg').click(function() {
-        $(this).hide();
-        var result = document.getElementById("mainImg");
-        result.src = mainImgPath;
-        isWriteMainPath = false;
-    });
+document.getElementById('leftSideBarBtn').onclick = function () {
+    this.className.toString() === "nav-menu me-0 ms-2 active"
+        ? this.classList.remove('active')
+        : this.classList.add('active');
 
-    $('#dragDrop').ondrop(function(e) {
-        var result = document.getElementById("mainImg");
-        if (!isWriteMainPath) {
-            isWriteMainPath = true;
-            mainImgPath = result.src.toString();
-            console.log(mainImgPath);
-            $('#deleteChangedImg').show();
-        }
-        result.src = URL.createObjectURL(e.target.files[0]);
-    });
+    var leftSideBar = document.getElementById('leftSideBar');
+    leftSideBar.className === "navigation scroll-bar nav-active"
+        ? leftSideBar.classList.remove('nav-active')
+        : leftSideBar.classList.add('nav-active');
+}
 
-    $('#dragDrop').ondragover = function () {
-        $(this).className = "card-body d-flex justify-content-between align-items-end p-0 drop";
-        return false;
-    }
 
-    $('#dragDrop').ondragleave = function () {
+function searchResult(val) {
 
-        $(this).className = "card-body d-flex justify-content-between align-items-end p-0";
-        return false;
+}
+
+document.getElementById('smallSearch').addEventListener('keydown', function(e) {
+    if (e.keyCode === 13) {
+        console.log(this.value);
+        $.ajax({
+            url: '/Home/SearchResult',
+            method: 'POST',
+            data: this.value,
+            dataType : 'string'
+        });
     }
 });
 
