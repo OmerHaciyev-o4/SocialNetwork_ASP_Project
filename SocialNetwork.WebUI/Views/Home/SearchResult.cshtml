@@ -1,6 +1,10 @@
-﻿@model string
+﻿@model SocialNetwork.WebUI.Models.SearchResultViewModel
 
-<h2>@Model</h2>
+@if (@Model != null)
+{
+    <h2>@Model.SearchData</h2>
+}
+
 
 @*<div class="middle-sidebar-bottom">
     <div class="middle-sidebar-left pe-0">

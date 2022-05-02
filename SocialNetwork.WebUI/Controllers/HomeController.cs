@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SocialNetwork.Business.Abstract;
 using SocialNetwork.Social.Entities.Concrete;
 using SocialNetwork.WebUI.Entities;
@@ -215,10 +216,22 @@ namespace SocialNetwork.WebUI.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult SearchResult()
+        {
+            string data = Request.Cookies["data"]?.ToString();
+
+            var model = JsonConvert.DeserializeObject<SearchResultViewModel>(data);
+            return View(model);
+        }
         [HttpPost]
         public IActionResult SearchResult(string data)
         {
-            return View(data);
+            HttpContext.Response.Cookies.Append("data", data);
+
+            var model = JsonConvert.DeserializeObject<SearchResultViewModel>(data);
+
+            return View(model);
         }
         public IActionResult GroupView()
         {
