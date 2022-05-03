@@ -1,5 +1,5 @@
 create database SocialDB
-drop database SocialDB
+--drop database SocialDB
 use SocialDB
 
 CREATE TABLE Users(

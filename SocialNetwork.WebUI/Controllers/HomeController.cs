@@ -217,18 +217,8 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult SearchResult()
-        {
-            string data = Request.Cookies["data"]?.ToString();
-
-            var model = JsonConvert.DeserializeObject<SearchResultViewModel>(data);
-            return View(model);
-        }
-        [HttpPost]
         public IActionResult SearchResult(string data)
         {
-            HttpContext.Response.Cookies.Append("data", data);
-
             var model = JsonConvert.DeserializeObject<SearchResultViewModel>(data);
 
             return View(model);

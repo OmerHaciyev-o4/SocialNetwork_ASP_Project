@@ -10,7 +10,7 @@ using SocialNetwork.WebUI.Entities;
 namespace SocialNetwork.WebUI.Migrations
 {
     [DbContext(typeof(CustomIdentityDbContext))]
-    [Migration("20220429212737_Identity")]
+    [Migration("20220503073156_Identity")]
     partial class Identity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
