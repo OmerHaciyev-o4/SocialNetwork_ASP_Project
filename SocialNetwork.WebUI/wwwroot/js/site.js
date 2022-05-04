@@ -22,6 +22,7 @@ document.getElementById('leftSideBarBtn').onclick = function () {
         : leftSideBar.classList.add('nav-active');
 }
 
+
 document.getElementById('smallSearch').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
         var objData = {
@@ -44,21 +45,49 @@ document.getElementById('smallSearch').addEventListener('keydown', function (e) 
 });
 document.getElementById('searchPanel').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
-        var objData = {
-            SearchData: this.value.toString()
-        };
+        var objData = {}
+        objData.SearchData = document.getElementById('searchPanel').value.toString();
 
-        $.ajax({
-            url: '/home/searchresult?data=' + JSON.stringify(objData),
-            type: 'GET',
-            error: function (error) {
-                console.log(error);
-            },
-             success: function () {
-                alert('YEAH');
-            }
-        });
+        document.cookie += `SearchModelJsonType = ${document.getElementById('searchPanel').value.toString()}`;
+        alert(document.cookie);
+        var jsonData = JSON.stringify(objData);
 
-        window.location = "/home/searchresult";
+        window.location = `/home/searchresult`;
+
+        //$.ajax({
+        //    url: "/home/searchresult",
+        //    type: 'POST',
+        //    data: JSON.stringify(objData),
+        //    dataType: 'application/json',
+        //    success: function(response) {
+        //        console.log(response);
+        //        if (response) {
+        //        }
+        //    }
+        //});
+
+        //$.ajax({
+        //    url: '/home/searchresult?searchedData=' + jsonData,
+        //    type: 'POST',
+        //    success: function (response) {
+        //        console.log(response);
+        //        if (response) {
+        //        }
+        //    }
+        //});
+
+        //setTimeout(function() {
+        //        window.location = "/home/searchresult";
+        //    },
+        //    1000);
     }
 });
+
+function generateRandomColor() {
+    let maxVal = 0xFFFFFF;
+    let randomNumber = Math.random() * maxVal;
+    randomNumber = Math.floor(randomNumber);
+    randomNumber = randomNumber.toString(16);
+    let randColor = randomNumber.padStart(6, 0);
+    return `#${randColor.toUpperCase()}`;
+}

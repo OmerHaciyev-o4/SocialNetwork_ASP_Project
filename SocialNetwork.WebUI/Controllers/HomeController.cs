@@ -42,36 +42,6 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult Badges()
-        {
-            return View();
-        }
-        public IActionResult Stories()
-        {
-            return View();
-        }
-        public IActionResult Videos()
-        {
-            return View();
-        }
-        public IActionResult Group()
-        {
-            return View();
-        }
-        public IActionResult Chat()
-        {
-            return View();
-        }
-        public IActionResult Settings()
-        {
-            return View();
-        }
-
-
         [HttpGet]
         public IActionResult AccountInformation()
         {
@@ -167,6 +137,48 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
+        public IActionResult Chat()
+        {
+            return View();
+        }
+        
+
+        public IActionResult Group()
+        {
+            return View();
+        }
+
+
+        public IActionResult GroupView()
+        {
+            return View();
+        }
+
+
+        public IActionResult Help()
+        {
+            return View();
+        }
+
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+
+        public IActionResult LiveConversation()
+        {
+            return View();
+        }
+
+
+        public IActionResult Notification()
+        {
+            return View();
+        }
+
+
         [HttpGet]
         public IActionResult ResetPassword()
         {
@@ -211,27 +223,41 @@ namespace SocialNetwork.WebUI.Controllers
             return View(model);
         }
 
-        public IActionResult Notification()
-        {
-            return View();
-        }
 
         [HttpGet]
-        public IActionResult SearchResult(string data)
+        public IActionResult SearchResult()
         {
-            var model = JsonConvert.DeserializeObject<SearchResultViewModel>(data);
+            string data = HttpContext.Request.Cookies["SearchModelJsonType"];
+            //var model = JsonConvert.DeserializeObject<SearchResultViewModel>(HttpContext.Request.Cookies["SearchModelJsonType"]);
 
-            return View(model);
+
+            int i = 0;
+
+
+            return View();
         }
-        public IActionResult GroupView()
+        //[HttpPost]
+        //public IActionResult SearchResult(string searchedData)
+        //{
+
+        //    //HttpContext.Response.Cookies.Append("SearchModelJsonType", searchedData);
+        //    return RedirectToAction("SearchResult");
+        //}
+
+
+        public IActionResult Settings()
         {
             return View();
         }
-        public IActionResult LiveConversation()
+
+
+        public IActionResult Stories()
         {
             return View();
         }
-        public IActionResult Help()
+
+
+        public IActionResult Videos()
         {
             return View();
         }

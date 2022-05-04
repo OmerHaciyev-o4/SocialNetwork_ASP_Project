@@ -1,4 +1,6 @@
-﻿namespace SocialNetwork.WebUI.Models
+﻿using System;
+
+namespace SocialNetwork.WebUI.Models
 {
     public class SearchResultViewModel
     {

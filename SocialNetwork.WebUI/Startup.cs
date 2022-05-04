@@ -43,7 +43,7 @@ namespace SocialNetwork.WebUI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
-            string connectString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            string connectString = @"Data Source=DESKTOP-GLFPTE3\MSSQLSERVER01;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IUserDal, EfUserDal>();

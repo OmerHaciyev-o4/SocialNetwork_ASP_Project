@@ -1,5 +1,5 @@
 create database SocialDB
---drop database SocialDB
+
 use SocialDB
 
 CREATE TABLE Users(
@@ -22,6 +22,20 @@ CREATE TABLE Users(
 	IsLogined bit
 )
 
+Create Table [Notifications](
+	[Id] int primary key identity(1,1) not null,
+	[SenderUserId] int not null foreign key references Users(Id),
+	[ReciveUserId] int not null foreign key references Users(Id),
+	[SendDate] datetime2 not null default(sysdatetime()),
+	Title nvarchar(max) not null,
+	[Message] nvarchar(max) null)
+
+Create Table Friends(
+	[Id] int primary key identity(1,1) not null,
+	[FriendId] int not null foreign key references Users(Id))
+
+
+
 Create table [Groups](
 [Id] int primary key identity(1,1) not null,
 [Name] nvarchar(30) not null,
@@ -42,12 +56,7 @@ create table GroupChats(
 	[Message] nvarchar(max)
 )
 
-Create Table [Notifications](
-	[Id] int primary key identity(1,1) not null,
-	[SenderUserId] int not null foreign key references Users(Id),
-	[SendDate] datetime2 not null default(sysdatetime()),
-	[Message] nvarchar(max) not null
-)
+
 
 CREATE TABLE Posts(
 	Id int primary key identity(1,1) not null,
