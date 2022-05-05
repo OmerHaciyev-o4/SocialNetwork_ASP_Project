@@ -45,14 +45,21 @@ document.getElementById('smallSearch').addEventListener('keydown', function (e) 
 });
 document.getElementById('searchPanel').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
-        var objData = {}
-        objData.SearchData = document.getElementById('searchPanel').value.toString();
+        alert(document.getElementById('searchPanel').value.toString());
 
-        document.cookie += `SearchModelJsonType = ${document.getElementById('searchPanel').value.toString()}`;
-        alert(document.cookie);
-        var jsonData = JSON.stringify(objData);
+        var splitedData = document.getElementById('searchPanel').value.toString()
+            .split(/[$&+,:;=?|'<>.\-^*()%!_\[\]\{\}\\\"/~\`\']/);
+        console.log(splitedData);
 
-        window.location = `/home/searchresult`;
+
+        //var objData = {}
+        //objData.SearchData = document.getElementById('searchPanel').value.toString();
+
+        //document.cookie += `SearchModelJsonType = ${document.getElementById('searchPanel').value.toString()}`;
+        //alert(document.cookie);
+        //var jsonData = JSON.stringify(objData);
+
+        //window.location = `/home/searchresult`;
 
         //$.ajax({
         //    url: "/home/searchresult",
@@ -83,11 +90,11 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
     }
 });
 
-function generateRandomColor() {
-    let maxVal = 0xFFFFFF;
-    let randomNumber = Math.random() * maxVal;
-    randomNumber = Math.floor(randomNumber);
-    randomNumber = randomNumber.toString(16);
-    let randColor = randomNumber.padStart(6, 0);
-    return `#${randColor.toUpperCase()}`;
-}
+//function generateRandomColor() {
+//    let maxVal = 0xFFFFFF;
+//    let randomNumber = Math.random() * maxVal;
+//    randomNumber = Math.floor(randomNumber);
+//    randomNumber = randomNumber.toString(16);
+//    let randColor = randomNumber.padStart(6, 0);
+//    return `#${randColor.toUpperCase()}`;
+//}

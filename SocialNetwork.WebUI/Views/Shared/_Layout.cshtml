@@ -47,8 +47,12 @@
             @*TODO: Search panel*@
             <div class="float-left header-search ms-3">
                 <div class="form-group mb-0 icon-input">
+                    <div class="position-absolute bg-grey border-0 rounded-xl theme-dark-bg" style="width: 100%; height: 100%; z-index: -1;"></div>
                     <i class="feather-search font-sm text-grey-400"></i>
-                    <input type="text" placeholder="Search @@username or #tag ;)))" class="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg" style="background: #020024; background: linear-gradient(90deg, #ff0000, #ffff00, #ff00f3, #0033ff, #ff00c4, #ff0000); background-size: 400%; letter-spacing: 1px; -webkit-text-fill-color: transparent; -webkit-background-clip: text; animation: searchWordColroAnime 12s linear infinite;" id="searchPanel">
+                    <input type="text" placeholder="Search @@username or #tag ;)))"
+                           class="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg"
+                           style="background: #020024; background: linear-gradient(90deg, #ff0000, #ffff00, #ff00f3, #0033ff, #ff00c4, #ff0000); background-size: 400%; letter-spacing: 1px; -webkit-text-fill-color: transparent; -webkit-background-clip: text; animation: searchWordColroAnime 12s linear infinite;"
+                           id="searchPanel">
                 </div>
             </div>
 
@@ -122,7 +126,7 @@
                                 <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Index"><i class="feather-tv btn-round-md bg-blue-gradiant me-3"></i><span>Home</span></a></li>
                                 <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Stories"><i class="feather-globe btn-round-md bg-gold-gradiant me-3"></i><span>Stories</span></a></li>
                                 <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Group"><i class="feather-zap btn-round-md bg-mini-gradiant me-3"></i><span>Groups</span></a></li>
-                                <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Profile"><i class="feather-user btn-round-md bg-blue-gradiant me-3"></i><span>Profile</span></a></li>
+                                <li><a class="nav-content-bttn open-font text-decoration-none" asp-controller="Home" asp-action="Profile"><i class="feather-user btn-round-md bg-red-gradiant me-3"></i><span>Profile</span></a></li>
                             </ul>
                         </div>
 
@@ -175,11 +179,10 @@
                         <ul class="mb-1 top-content">
                             <li class="logo d-none d-xl-block d-lg-block"></li>
                             <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Index"><i class="feather-tv btn-round-md bg-blue-gradiant me-3"></i><span>Newsfeed</span></a></li>
-                            <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Badges"><i class="feather-award btn-round-md bg-red-gradiant me-3"></i><span>Badges</span></a></li>
                             <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Stories"><i class="feather-globe btn-round-md bg-gold-gradiant me-3"></i><span>Explore Stories</span></a></li>
                             <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Group"><i class="feather-zap btn-round-md bg-mini-gradiant me-3"></i><span>Popular Groups</span></a></li>
                             <li><a class="nav-content-bttn open-font" href="/userpage"><i class="feather-video btn-round-md bg-primary-gradiant me-3"></i><span>Create Live </span></a></li>
-                            <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Profile"><i class="feather-user btn-round-md bg-primary-gradiant me-3"></i><span>Author Profile </span></a></li>
+                            <li><a class="nav-content-bttn open-font" asp-controller="Home" asp-action="Profile"><i class="feather-user btn-round-md bg-red-gradiant me-3"></i><span>Author Profile </span></a></li>
                         </ul>
                     </div>
 

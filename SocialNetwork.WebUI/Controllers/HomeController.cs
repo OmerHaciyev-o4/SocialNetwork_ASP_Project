@@ -179,6 +179,12 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
+        public IActionResult Profile()
+        {
+            return View();
+        }
+
+
         [HttpGet]
         public IActionResult ResetPassword()
         {
