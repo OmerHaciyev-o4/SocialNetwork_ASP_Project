@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SocialNetwork.Social.Entities.Concrete;
 
 namespace SocialNetwork.DataAccess.Concrete
@@ -14,7 +13,7 @@ namespace SocialNetwork.DataAccess.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConfigurationManager);
+            optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["DefaultConnectionString"].ConnectionString);
         }
 
         public DbSet<User> Users { get; set; }
