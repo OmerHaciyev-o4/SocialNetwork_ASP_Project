@@ -14,10 +14,7 @@ namespace SocialNetwork.DataAccess.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connStr =
-                @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-
-            optionsBuilder.UseSqlServer(connStr);
+            optionsBuilder.UseSqlServer(ConfigurationManager);
         }
 
         public DbSet<User> Users { get; set; }
