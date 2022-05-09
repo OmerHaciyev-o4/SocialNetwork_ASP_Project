@@ -4,6 +4,7 @@ namespace SocialNetwork.WebUI.Models
 {
     public class SearchResultViewModel
     {
-        public string SearchData { get; set; }
+        public string RateSigns { get; set; }
+        public string Hashs { get; set; }
     }
 }

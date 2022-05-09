@@ -25,32 +25,96 @@ document.getElementById('leftSideBarBtn').onclick = function () {
 
 document.getElementById('smallSearch').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
-        var objData = {
-            SearchData: this.value.toString()
-        };
+        var splitedData = document.getElementById('searchPanel').value.toString()
+            .split(/[$&+,:;=?|'<>.\-^*()%!_\[\]\{\}\\\"/~\`\']/);
+        var splitedDataRowFirst = splitedData[0].split(' ');
+
+        var searcedDataObj = {};
+        searcedDataObj.RateSigns = "";
+        searcedDataObj.Hashs = "";
+
+        for (var i = 0; i < splitedDataRowFirst.length; i++) {
+            if (splitedDataRowFirst[i] != (null || "")) {
+                var fisrtSymbol = splitedDataRowFirst[i][0];
+                if (fisrtSymbol == '@') {
+                    var tempSplit = splitedDataRowFirst[i].split('@');
+                    searcedDataObj.RateSigns += `${tempSplit[1]},`;
+                }
+                else if (fisrtSymbol == '#') {
+                    var tempSplit = splitedDataRowFirst[i].split('#');
+                    searcedDataObj.Hashs += `${tempSplit[1]},`;
+                }
+            }
+        }
+
+        var searchedDataObjToJson = JSON.stringify(searcedDataObj);
 
         $.ajax({
-            url: '/home/searchresult?data=' + JSON.stringify(objData),
-            type: 'GET',
-            error: function (error) {
-                console.log(error);
-            },
-            success: function () {
-                alert('YEAH');
+            url: '/home/searchresult?searchedData=' + searchedDataObjToJson,
+            type: 'POST',
+            success: function (response) {
+                console.log(response);
+                if (response) {
+                }
             }
         });
 
-        window.location = "/home/searchresult";
+        setTimeout(function () {
+            window.location = "/home/searchresult";
+        }, 500);
     }
 });
 document.getElementById('searchPanel').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
-        alert(document.getElementById('searchPanel').value.toString());
-
         var splitedData = document.getElementById('searchPanel').value.toString()
-            .split(/[$&+,:;=?|'<>.\-^*()%!_\[\]\{\}\\\"/~\`\']/);
-        console.log(splitedData);
+            .split(/[$&+,:;=?|'<>\-^*()%!_\[\]\{\}\\\"/~\`\']/);
+        var splitedDataRowFirst = splitedData[0].split(' ');
 
+        var searcedDataObj = {};
+        searcedDataObj.RateSigns = "";
+        searcedDataObj.Hashs = "";
+
+        for (var i = 0; i < splitedDataRowFirst.length; i++) {
+            if (splitedDataRowFirst[i] != (null || "")) {
+                var fisrtSymbol = splitedDataRowFirst[i][0];
+                if (fisrtSymbol == '@') {
+                    var tempSplit = splitedDataRowFirst[i].split('@');
+                    searcedDataObj.RateSigns += `${tempSplit[1]},`;
+                }
+                else if (fisrtSymbol == '#') {
+                    var tempSplit = splitedDataRowFirst[i].split('#');
+                    searcedDataObj.Hashs += `${tempSplit[1]},`;
+                }
+            }
+        }
+
+        var searchedDataObjToJson = JSON.stringify(searcedDataObj);
+
+        $.ajax({
+            url: '/home/searchresult?searchedData=' + searchedDataObjToJson,
+            type: 'POST',
+            success: function (response) {
+                console.log(response);
+                if (response) {
+                }
+            }
+        });
+
+        //setTimeout(function() {
+        //        window.location = "/home/searchresult";
+        //    }, 5000);
+
+        //$.ajax({
+        //    url: "/home/searchresult",
+        //    type: 'POST',
+        //    data: searchedDataObjToJson,
+        //    dataType: 'application/json',
+        //    success: function(response) {
+        //        console.log(response);
+        //        if (response) {
+        //        }
+        //    }
+        //});
 
         //var objData = {}
         //objData.SearchData = document.getElementById('searchPanel').value.toString();

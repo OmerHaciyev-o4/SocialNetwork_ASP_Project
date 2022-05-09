@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialNetwork.Business.Abstract;
 using SocialNetwork.Social.Entities.Concrete;
+using SocialNetwork.WebUI.DTOS;
 using SocialNetwork.WebUI.Entities;
 using SocialNetwork.WebUI.Helpers;
 using SocialNetwork.WebUI.Models;
@@ -24,17 +26,19 @@ namespace SocialNetwork.WebUI.Controllers
         private RoleManager<CustomIdentityRole> _roleManager;
         private SignInManager<CustomIdentityUser> _signInManager;
         private IUserService _userService;
+        private IMapper _mapper;
         private IWebHostEnvironment _webHost;
         private Cloudinary _cloudinary;
 
 
-        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost)
+        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _userService = userService;
             _webHost = webHost;
+            _mapper = mapper;
 
             User = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
             var myAccount = new Account(apiKey: "392371254347452", apiSecret: "7qwJgIJnuMdrYhtOVgj4TxQ2yNQ", cloud: "social-network-web");
@@ -233,22 +237,42 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpGet]
         public IActionResult SearchResult()
         {
-            string data = HttpContext.Request.Cookies["SearchModelJsonType"];
-            //var model = JsonConvert.DeserializeObject<SearchResultViewModel>(HttpContext.Request.Cookies["SearchModelJsonType"]);
+            string data = HttpContext.Request.Cookies["SearchModelJsonData"];
+            var resultModel = new SearchResultResultViewModel();
+            if (!string.IsNullOrEmpty(data))
+            {
+                var model = JsonConvert.DeserializeObject<SearchResultViewModel>(HttpContext.Request.Cookies["SearchModelJsonData"]);
+                HttpContext.Response.Cookies.Delete("SearchModelJsonData");
+
+                string[] RateSigns = model.RateSigns.Split(',');
+                string[] Hashs = model.Hashs.Split(',');
 
 
-            int i = 0;
+                for (int i = 0; i < RateSigns.Length - 1; i++)
+                {
+                    var user = _userService.GetByUsername(RateSigns[i]);
+                    if (user != null)
+                    {
+                        //analiz friends ;)
+                        var userMapper = _mapper.Map<UserForDetailDto>(user);
 
+                        //TODO: Problem userMapper is null
+                        resultModel.Users.Add(userMapper);
+                    }
+                }
 
-            return View();
+                int o = 0;
+
+            }
+
+            return View(resultModel);
         }
-        //[HttpPost]
-        //public IActionResult SearchResult(string searchedData)
-        //{
-
-        //    //HttpContext.Response.Cookies.Append("SearchModelJsonType", searchedData);
-        //    return RedirectToAction("SearchResult");
-        //}
+        [HttpPost]
+        public IActionResult SearchResult(string searchedData)
+        {
+            HttpContext.Response.Cookies.Append("SearchModelJsonData", searchedData);
+            return RedirectToAction("SearchResult");
+        }
 
 
         public IActionResult Settings()

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Social.Entities.Concrete;
 
@@ -13,7 +12,7 @@ namespace SocialNetwork.DataAccess.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["DefaultConnectionString"].ConnectionString);
+            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-GLFPTE3\MSSQLSERVER01;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
 
         public DbSet<User> Users { get; set; }
