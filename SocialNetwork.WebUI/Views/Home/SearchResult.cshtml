@@ -1,4 +1,5 @@
-﻿@model SocialNetwork.WebUI.Models.SearchResultResultViewModel
+﻿@using SocialNetwork.WebUI.Controllers
+@model SocialNetwork.WebUI.Models.SearchResultResultViewModel
 
 @{
     string resultCount = "";
@@ -25,154 +26,61 @@
                     {
                         foreach (var user in Model.Users)
                         {
-                            <div class="col-md-3 col-sm-4 pe-2 ps-2" id="@user.Id + 7845">
-                                <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                                    <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1">
-                                        @if (string.IsNullOrEmpty(user.ImageUrl))
-                                        {
-                                            <img src="~/assets/images/defaultImage.png" alt="@user.FirstName" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss">
-                                        }
-                                        else
-                                        {
-                                            <img src="@user.ImageUrl" alt="@user.FirstName" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss">
-                                        }
-                                    </figure>
-                                    <div class="clearfix w-100"></div>
-                                    <h4 class="fw-700 font-xsss mt-3 mb-0">@string.Format("{0} {1}", user.FirstName, user.Lastname)</h4>
-                                    <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">@string.Format("@{0}", user.Username)</p>
-                                    @if (user.IsFriend) { <a href="/" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">UNFOLLOW</a> }
-                                    else { <a href="/" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">FOLLOW</a> }
+                            if (user.Username == HomeController.User.Username)
+                            {
+                                <div class="col-md-3 col-sm-4 pe-2 ps-2" id="@user.Id + 7845">
+                                    <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
+                                        <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
+                                            <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1">
+                                                @if (string.IsNullOrEmpty(user.ImageUrl))
+                                                {
+                                                    <img src="~/assets/images/defaultImage.png" alt="@user.FirstName" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss">
+                                                }
+                                                else
+                                                {
+                                                    <img src="@user.ImageUrl" alt="@user.FirstName" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss">
+                                                }
+                                            </figure>
+                                            <div class="clearfix w-100"></div>
+                                            <h4 class="fw-700 font-xsss mt-3 mb-0">@string.Format("{0} {1}", user.FirstName, user.Lastname)</h4>
+                                            <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">@string.Format("@{0}", user.Username)</p>
+                                            <a href="/" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">Go to profile</a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-3 col-sm-4 pe-2 ps-2" id="@user.Id + 7845">
+                                    <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
+                                        <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
+                                            <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1">
+                                                @if (string.IsNullOrEmpty(user.ImageUrl))
+                                                {
+                                                    <img src="~/assets/images/defaultImage.png" alt="@user.FirstName" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss">
+                                                }
+                                                else
+                                                {
+                                                    <img src="@user.ImageUrl" alt="@user.FirstName" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss">
+                                                }
+                                            </figure>
+                                            <div class="clearfix w-100"></div>
+                                            <h4 class="fw-700 font-xsss mt-3 mb-0">@string.Format("{0} {1}", user.FirstName, user.Lastname)</h4>
+                                            <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">@string.Format("@{0}", user.Username)</p>
+                                            @if (user.IsFriend)
+                                            {
+                                                <a href="/" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">UNFOLLOW</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="/" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">FOLLOW</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         }
                     }
-                    @*
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1">
-                                    <img src="/assets/images/user-7.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss">
-                                </figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Victor Exrixon </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p>
-                                <a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">FOLLOW</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-12.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Surfiya Zakir </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p>
-                                <a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">UNFOLLOW</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-4.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Goria Coast </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-3.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Hurin Seary </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-2.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Victor Exrixon </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-8.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Surfiya Zakir </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-4.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Goria Coast </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p>
-                                <a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-3.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Hurin Seary </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-8.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Surfiya Zakir </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-4.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Goria Coast </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-3.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Hurin Seary </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-4 pe-2 ps-2">
-                        <div class="card d-block border-0 shadow-xss rounded-3 overflow-hidden mb-3">
-                            <div class="card-body d-block w-100 ps-3 pe-3 pb-4 text-center">
-                                <figure class="overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1"><img src="/assets/images/user-11.png" alt="avater" class="float-right p-0 bg-white rounded-circle w-100 shadow-xss"></figure>
-                                <div class="clearfix w-100"></div>
-                                <h4 class="fw-700 font-xsss mt-3 mb-0">Aliqa Macale </h4>
-                                <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">macale343</p><a href="/defaultmember" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white">ADD FRIEND</a>
-                            </div>
-                        </div>
-                    </div>
-                    *@
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css"/>
 </head>
 
-<body class="color-theme-blue mont-font loaded">
+<body class="color-theme-blue mont-font loaded" onload="getting();">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div>
         <div class="nav-header bg-white shadow-xs border-0">
@@ -310,7 +310,7 @@
                 </div>
             </div>
         </div>
-        <div class="main-content bg-lightblue theme-dark-bg right-chat-active" id="renderPanel">
+        <div class="main-content bg-lightblue theme-dark-bg right-chat-active" id="renderPanel" style="height: 100vh !important;">
             @RenderBody()
         </div>
         <div></div>

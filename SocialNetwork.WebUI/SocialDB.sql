@@ -32,7 +32,8 @@ Create Table [Notifications](
 
 Create Table Friends(
 	[Id] int primary key identity(1,1) not null,
-	[FriendId] int not null foreign key references Users(Id))
+	[FriendId] int not null foreign key references Users(Id),
+	[UserId] int not null foreign key references Users(Id))
 
 
 

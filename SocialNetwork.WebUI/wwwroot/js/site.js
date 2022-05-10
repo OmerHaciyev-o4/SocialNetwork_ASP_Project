@@ -100,9 +100,9 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
             }
         });
 
-        //setTimeout(function() {
-        //        window.location = "/home/searchresult";
-        //    }, 5000);
+        setTimeout(function() {
+                window.location = "/home/searchresult";
+            }, 500);
 
         //$.ajax({
         //    url: "/home/searchresult",
@@ -153,6 +153,72 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
         //    1000);
     }
 });
+
+
+//document.getElementsByTagName('body').addEventListener('load', function() {
+//        setInterval(function() {
+//                $.ajax({
+//                    url: "/Home/GetNotification",
+//                    method: "GET",
+//                    success: function(data) {
+//                        console.log(data);
+//                    },
+//                    error: function(err) {
+//                        console.log(err);
+//                    }
+//                });
+//            },
+//            500);
+//    });
+
+
+function getting() {
+    setInterval(function () {
+            $.ajax({
+                url: "/Home/GetNotification",
+                method: "GET",
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        },
+        500);
+}
+
+//document.body.addEventListener('load', function () {
+//    setInterval(function () {
+//            $.ajax({
+//                url: "/Home/GetNotification",
+//                method: "GET",
+//                success: function (data) {
+//                    console.log(data);
+//                },
+//                error: function (err) {
+//                    console.log(err);
+//                }
+//            });
+//        },
+//        500);
+//});
+
+//document.querySelector('body').addEventListener('load', function () {
+
+//    setTimeout(function() {
+//            $.ajax({
+//                url: '/home/GetNotification',
+//                type: 'GET',
+//                success: function (response) {
+//                    console.log(response);
+//                    if (response) {
+//                    }
+//                }
+//            });
+//        },
+//        500);
+//});
 
 //function generateRandomColor() {
 //    let maxVal = 0xFFFFFF;

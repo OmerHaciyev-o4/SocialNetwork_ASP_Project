@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Web.Mvc;
 using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialNetwork.Business.Abstract;
+using SocialNetwork.DataAccess.Abstract;
 using SocialNetwork.Social.Entities.Concrete;
 using SocialNetwork.WebUI.DTOS;
 using SocialNetwork.WebUI.Entities;
 using SocialNetwork.WebUI.Helpers;
 using SocialNetwork.WebUI.Models;
+using Controller = Microsoft.AspNetCore.Mvc.Controller;
+using JsonResult = Microsoft.AspNetCore.Mvc.JsonResult;
 
 namespace SocialNetwork.WebUI.Controllers
 {
-    [Authorize]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class HomeController : Controller
     {
         public static User User { get; set; }
@@ -26,12 +29,13 @@ namespace SocialNetwork.WebUI.Controllers
         private RoleManager<CustomIdentityRole> _roleManager;
         private SignInManager<CustomIdentityUser> _signInManager;
         private IUserService _userService;
+        private IFriendService _friendService;
         private IMapper _mapper;
         private IWebHostEnvironment _webHost;
         private Cloudinary _cloudinary;
 
 
-        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost, IMapper mapper)
+        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost, IMapper mapper, IFriendService friendService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -39,6 +43,7 @@ namespace SocialNetwork.WebUI.Controllers
             _userService = userService;
             _webHost = webHost;
             _mapper = mapper;
+            _friendService = friendService;
 
             User = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
             var myAccount = new Account(apiKey: "392371254347452", apiSecret: "7qwJgIJnuMdrYhtOVgj4TxQ2yNQ", cloud: "social-network-web");
@@ -46,7 +51,7 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
-        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult AccountInformation()
         {
             var model = new AccountViewModel
@@ -56,7 +61,7 @@ namespace SocialNetwork.WebUI.Controllers
 
             return View(model);
         }
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public IActionResult AccountInformation(AccountViewModel model, User user)
         {
             User currentUserDb = User;
@@ -189,12 +194,12 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
-        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult ResetPassword()
         {
             return View();
         }
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public IActionResult ResetPassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
@@ -234,44 +239,45 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
-        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult SearchResult()
         {
             string data = HttpContext.Request.Cookies["SearchModelJsonData"];
             var resultModel = new SearchResultResultViewModel();
-            if (!string.IsNullOrEmpty(data))
+            var model = JsonConvert.DeserializeObject<SearchResultViewModel>(HttpContext.Request.Cookies["SearchModelJsonData"]);
+
+            string[] RateSigns = model.RateSigns.Split(',');
+            string[] Hashs = model.Hashs.Split(',');
+
+
+            for (int i = 0; i < RateSigns.Length - 1; i++)
             {
-                var model = JsonConvert.DeserializeObject<SearchResultViewModel>(HttpContext.Request.Cookies["SearchModelJsonData"]);
-                HttpContext.Response.Cookies.Delete("SearchModelJsonData");
-
-                string[] RateSigns = model.RateSigns.Split(',');
-                string[] Hashs = model.Hashs.Split(',');
-
-
-                for (int i = 0; i < RateSigns.Length - 1; i++)
+                var user = _userService.GetByUsername(RateSigns[i]);
+                if (user != null)
                 {
-                    var user = _userService.GetByUsername(RateSigns[i]);
-                    if (user != null)
-                    {
-                        //analiz friends ;)
-                        var userMapper = _mapper.Map<UserForDetailDto>(user);
-
-                        //TODO: Problem userMapper is null
-                        resultModel.Users.Add(userMapper);
-                    }
+                    var userMapper = _mapper.Map<UserForDetailDto>(user);
+                    userMapper.IsFriend = _friendService.CheckFriend(User.Id, userMapper.Id);
+                    resultModel.Users.Add(userMapper);
                 }
-
-                int o = 0;
-
             }
+
+            int o = 0;
 
             return View(resultModel);
         }
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public IActionResult SearchResult(string searchedData)
         {
             HttpContext.Response.Cookies.Append("SearchModelJsonData", searchedData);
             return RedirectToAction("SearchResult");
+        }
+
+        public IActionResult GetNotification()
+        {
+
+            var user = JsonConvert.SerializeObject(User);
+
+            return Ok(User);
         }
 
 
