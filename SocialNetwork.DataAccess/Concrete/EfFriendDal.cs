@@ -15,10 +15,22 @@ namespace SocialNetwork.DataAccess.Concrete
         {
             using (var context = new SocialContext())
             {
-                var friend = 
-                    from f in context.Friends
-                    where f.UserId == userId && f.FriendId == friendId
-                        select f;
+                if (!context.Friends.Any())
+                    return false;
+
+                var friend = context.Set<Friend>().FirstOrDefault(uf => uf.UserId == userId && uf.FriendId == friendId);
+
+                return friend != null;
+
+                //var friend = 
+                //    from f in context.Friends
+                //    where f.UserId == userId && f.FriendId == friendId
+                //        select f;
+
+                //if (fr)
+                //{
+                    
+                //}
 
                 return friend != null;
             }

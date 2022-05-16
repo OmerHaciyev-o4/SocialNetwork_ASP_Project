@@ -19,6 +19,8 @@ using SocialNetwork.Business.Abstract;
 using SocialNetwork.Business.Concrete;
 using SocialNetwork.DataAccess.Abstract;
 using SocialNetwork.DataAccess.Concrete;
+using SocialNetwork.Social.Entities.Concrete;
+using SocialNetwork.WebUI.Controllers;
 using SocialNetwork.WebUI.Entities;
 
 namespace SocialNetwork.WebUI
@@ -44,15 +46,17 @@ namespace SocialNetwork.WebUI
 
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IFriendService, FriendManager>();
+            services.AddScoped<INotificationService, NotificationManager>();
 
             services.AddScoped<IUserDal, EfUserDal>();
             services.AddScoped<IFriendDal, EfFriendDal>();
+            services.AddScoped<INotificationDal, EFNotificationDal>();
 
 
             services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<CustomIdentityDbContext>(options =>
-                options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+                options.UseSqlServer(@"Data Source=DESKTOP-GLFPTE3\MSSQLSERVER01;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
 
             services.AddIdentity<CustomIdentityUser, CustomIdentityRole>()
                 .AddEntityFrameworkStores<CustomIdentityDbContext>()
@@ -98,6 +102,13 @@ namespace SocialNetwork.WebUI
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.Use(async (context, next) =>
+            {
+                HomeController.Context = context;
+
+                await next();
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

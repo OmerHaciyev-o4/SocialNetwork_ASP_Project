@@ -47,12 +47,7 @@ namespace SocialNetwork.WebUI.Controllers
             try
             {
                 _signInManager.SignOutAsync().Wait();
-                User user = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
-                if (user != null)
-                {
-                    user.IsLogined = false;
-                    _userService.Update(user);
-                }
+                HomeController.User = null;
             }
             catch (Exception) { }
 
@@ -115,20 +110,7 @@ namespace SocialNetwork.WebUI.Controllers
                 var result = _signInManager.PasswordSignInAsync(model.Username,
                     model.Password, model.RememberMe, false).Result;
                 if (result.Succeeded)
-                {
-                    User user = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
-                    if (user != null)
-                    {
-                        user.IsLogined = false;
-                        _userService.Update(user);
-                    }
-
-                    user = _userService.GetByUsername(model.Username);
-                    user.IsLogined = true;
-                    _userService.Update(user);
-
                     return RedirectToAction("Index", "Home");
-                }
 
                 TempData["noLogErr"] = "Please enter Username or Password.";
             }

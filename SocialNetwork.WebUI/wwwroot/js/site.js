@@ -100,131 +100,24 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
             }
         });
 
-        setTimeout(function() {
-                window.location = "/home/searchresult";
-            }, 500);
-
-        //$.ajax({
-        //    url: "/home/searchresult",
-        //    type: 'POST',
-        //    data: searchedDataObjToJson,
-        //    dataType: 'application/json',
-        //    success: function(response) {
-        //        console.log(response);
-        //        if (response) {
-        //        }
-        //    }
-        //});
-
-        //var objData = {}
-        //objData.SearchData = document.getElementById('searchPanel').value.toString();
-
-        //document.cookie += `SearchModelJsonType = ${document.getElementById('searchPanel').value.toString()}`;
-        //alert(document.cookie);
-        //var jsonData = JSON.stringify(objData);
-
-        //window.location = `/home/searchresult`;
-
-        //$.ajax({
-        //    url: "/home/searchresult",
-        //    type: 'POST',
-        //    data: JSON.stringify(objData),
-        //    dataType: 'application/json',
-        //    success: function(response) {
-        //        console.log(response);
-        //        if (response) {
-        //        }
-        //    }
-        //});
-
-        //$.ajax({
-        //    url: '/home/searchresult?searchedData=' + jsonData,
-        //    type: 'POST',
-        //    success: function (response) {
-        //        console.log(response);
-        //        if (response) {
-        //        }
-        //    }
-        //});
-
         //setTimeout(function() {
         //        window.location = "/home/searchresult";
-        //    },
-        //    1000);
+        //    }, 500);
     }
 });
 
-
-//document.getElementsByTagName('body').addEventListener('load', function() {
-//        setInterval(function() {
-//                $.ajax({
-//                    url: "/Home/GetNotification",
-//                    method: "GET",
-//                    success: function(data) {
-//                        console.log(data);
-//                    },
-//                    error: function(err) {
-//                        console.log(err);
-//                    }
-//                });
-//            },
-//            500);
-//    });
-
-
 function getting() {
-    setInterval(function () {
-            $.ajax({
-                url: "/Home/GetNotification",
-                method: "GET",
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function (err) {
-                    console.log(err);
-                }
-            });
-        },
-        500);
+    //setInterval(function () {
+    //        $.ajax({
+    //            url: "/Home/GetNotification",
+    //            method: "GET",
+    //            success: function (data) {
+    //                console.log(data);
+    //            },
+    //            error: function (err) {
+    //                console.log(err);
+    //            }
+    //        });
+    //    },
+    //    500);
 }
-
-//document.body.addEventListener('load', function () {
-//    setInterval(function () {
-//            $.ajax({
-//                url: "/Home/GetNotification",
-//                method: "GET",
-//                success: function (data) {
-//                    console.log(data);
-//                },
-//                error: function (err) {
-//                    console.log(err);
-//                }
-//            });
-//        },
-//        500);
-//});
-
-//document.querySelector('body').addEventListener('load', function () {
-
-//    setTimeout(function() {
-//            $.ajax({
-//                url: '/home/GetNotification',
-//                type: 'GET',
-//                success: function (response) {
-//                    console.log(response);
-//                    if (response) {
-//                    }
-//                }
-//            });
-//        },
-//        500);
-//});
-
-//function generateRandomColor() {
-//    let maxVal = 0xFFFFFF;
-//    let randomNumber = Math.random() * maxVal;
-//    randomNumber = Math.floor(randomNumber);
-//    randomNumber = randomNumber.toString(16);
-//    let randColor = randomNumber.padStart(6, 0);
-//    return `#${randColor.toUpperCase()}`;
-//}

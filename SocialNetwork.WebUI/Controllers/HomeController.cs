@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Web.Mvc;
 using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -21,10 +22,11 @@ using JsonResult = Microsoft.AspNetCore.Mvc.JsonResult;
 
 namespace SocialNetwork.WebUI.Controllers
 {
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         public static User User { get; set; }
+        public static HttpContext Context { get; set; }
         private UserManager<CustomIdentityUser> _userManager;
         private RoleManager<CustomIdentityRole> _roleManager;
         private SignInManager<CustomIdentityUser> _signInManager;
@@ -45,13 +47,17 @@ namespace SocialNetwork.WebUI.Controllers
             _mapper = mapper;
             _friendService = friendService;
 
-            User = _userService.GetAll().FirstOrDefault(u => u.IsLogined == true);
+            var userId = _userManager.GetUserId(Context.User);
+            var username = _userManager.Users.FirstOrDefault(u => u.Id == userId).UserName;
+
+            User = _userService.GetByUsername(username);
+
             var myAccount = new Account(apiKey: "392371254347452", apiSecret: "7qwJgIJnuMdrYhtOVgj4TxQ2yNQ", cloud: "social-network-web");
             _cloudinary = new Cloudinary(myAccount);
         }
 
 
-        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [HttpGet]
         public IActionResult AccountInformation()
         {
             var model = new AccountViewModel
@@ -61,7 +67,7 @@ namespace SocialNetwork.WebUI.Controllers
 
             return View(model);
         }
-        [Microsoft.AspNetCore.Mvc.HttpPost]
+        [HttpPost]
         public IActionResult AccountInformation(AccountViewModel model, User user)
         {
             User currentUserDb = User;
@@ -199,7 +205,7 @@ namespace SocialNetwork.WebUI.Controllers
         {
             return View();
         }
-        [Microsoft.AspNetCore.Mvc.HttpPost]
+        [HttpPost]
         public IActionResult ResetPassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
@@ -239,7 +245,7 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
-        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [HttpGet]
         public IActionResult SearchResult()
         {
             string data = HttpContext.Request.Cookies["SearchModelJsonData"];
@@ -265,7 +271,7 @@ namespace SocialNetwork.WebUI.Controllers
 
             return View(resultModel);
         }
-        [Microsoft.AspNetCore.Mvc.HttpPost]
+        [HttpPost]
         public IActionResult SearchResult(string searchedData)
         {
             HttpContext.Response.Cookies.Append("SearchModelJsonData", searchedData);
