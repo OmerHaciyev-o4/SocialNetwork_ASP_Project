@@ -107,17 +107,16 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
 });
 
 function getting() {
-    //setInterval(function () {
-    //        $.ajax({
-    //            url: "/Home/GetNotification",
-    //            method: "GET",
-    //            success: function (data) {
-    //                console.log(data);
-    //            },
-    //            error: function (err) {
-    //                console.log(err);
-    //            }
-    //        });
-    //    },
-    //    500);
+    setInterval(function () {
+        $.ajax({
+            url: "/Database/GetNotification",
+            method: "GET",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }, 1000);
 }

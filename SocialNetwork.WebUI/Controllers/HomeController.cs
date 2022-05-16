@@ -278,14 +278,6 @@ namespace SocialNetwork.WebUI.Controllers
             return RedirectToAction("SearchResult");
         }
 
-        public IActionResult GetNotification()
-        {
-
-            var user = JsonConvert.SerializeObject(User);
-
-            return Ok(User);
-        }
-
 
         public IActionResult Settings()
         {
