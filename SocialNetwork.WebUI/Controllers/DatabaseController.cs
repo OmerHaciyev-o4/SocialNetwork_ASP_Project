@@ -20,9 +20,17 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpGet]
         public IActionResult GetNotification()
         {
-            var user = JsonConvert.SerializeObject(HomeController.User);
+            var notifications = _notificationService.GetList(HomeController.User.Id);
 
-            return Ok(HomeController.User);
+            return Ok(JsonConvert.SerializeObject(notifications));
+        }
+
+        [HttpPost("addnotification")]
+        public IActionResult AddNotification()
+        {
+            //TODO: model with new notification send
+            //TODO: new not. write database.
+            return Ok();
         }
     }
 }

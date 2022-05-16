@@ -120,3 +120,6 @@ function getting() {
         });
     }, 1000);
 }
+function follow(el, id) {
+
+}
