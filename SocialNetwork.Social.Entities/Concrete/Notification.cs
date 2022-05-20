@@ -11,14 +11,15 @@ namespace SocialNetwork.Social.Entities.Concrete
     {
         public int Id { get; set; }
 
-        public int SenderUserId { get; set; }
-
-        public int ReceiveUserId { get; set; }
-
         public DateTime SendDate { get; set; }
 
         public string Title { get; set; }
 
         public string Message { get; set; }
+
+
+        public int SenderUserId { get; set; }
+
+        public int ReceiveUserId { get; set; }
     }
 }

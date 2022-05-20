@@ -100,13 +100,13 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
             }
         });
 
-        //setTimeout(function() {
-        //        window.location = "/home/searchresult";
-        //    }, 500);
+        setTimeout(function() {
+            window.location = "/home/searchresult";
+        }, 800);
     }
 });
 
-function getting() {
+function GetNotification() {
     setInterval(function () {
         $.ajax({
             url: "/Database/GetNotification",
@@ -120,6 +120,15 @@ function getting() {
         });
     }, 1000);
 }
-function follow(el, id) {
+function AddFollow(el, id) {
+    var notObj = {
+        "Title" : "Friend Request",
+        "ReceiveUserId" : Number(id)
+    }
 
+
+    $.ajax({
+        url: `/Database/AddNotification?notificationInJson=${JSON.stringify(notObj)}`,
+        method: "POST"
+    });
 }

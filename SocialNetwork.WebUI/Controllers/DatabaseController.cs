@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialNetwork.Business.Abstract;
+using SocialNetwork.Social.Entities.Concrete;
 
 namespace SocialNetwork.WebUI.Controllers
 {
@@ -18,16 +20,26 @@ namespace SocialNetwork.WebUI.Controllers
         }
         
         [HttpGet]
-        public IActionResult GetNotification()
+        public IActionResult GetNotification(string data = null)
         {
             var notifications = _notificationService.GetList(HomeController.User.Id);
-
-            return Ok(JsonConvert.SerializeObject(notifications));
+            if (!string.IsNullOrEmpty(data))
+            {
+                notifications.Sort((x, y) => DateTime.Compare(x.SendDate, y.SendDate));
+            }
+            return Ok(notifications);
         }
 
-        [HttpPost("addnotification")]
-        public IActionResult AddNotification()
+        [HttpPost]
+        public IActionResult AddNotification(string notificationInJson)
         {
+            int i = 0;
+
+            var notification = JsonConvert.DeserializeObject<Notification>(notificationInJson);
+            notification.SenderUserId = HomeController.User.Id;
+            notification.SendDate = DateTime.Now;
+            _notificationService.Add(notification);
+
             //TODO: model with new notification send
             //TODO: new not. write database.
             return Ok();
