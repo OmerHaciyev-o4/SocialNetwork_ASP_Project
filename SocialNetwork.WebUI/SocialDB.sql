@@ -25,7 +25,7 @@ CREATE TABLE Users(
 Create Table [Notifications](
 	[Id] int primary key identity(1,1) not null,
 	[SenderUserId] int not null foreign key references Users(Id),
-	[ReciveUserId] int not null foreign key references Users(Id),
+	[ReceiveUserId] int not null foreign key references Users(Id),
 	[SendDate] datetime2 not null default(sysdatetime()),
 	Title nvarchar(max) not null,
 	[Message] nvarchar(max) null)

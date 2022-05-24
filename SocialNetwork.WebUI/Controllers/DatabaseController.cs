@@ -39,10 +39,14 @@ namespace SocialNetwork.WebUI.Controllers
             notification.SenderUserId = HomeController.User.Id;
             notification.SendDate = DateTime.Now;
             _notificationService.Add(notification);
-
-            //TODO: model with new notification send
-            //TODO: new not. write database.
+            
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult GetUsers()
+        {
+            return Ok(_userService.GetAll());
         }
     }
 }

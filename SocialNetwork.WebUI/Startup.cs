@@ -56,7 +56,7 @@ namespace SocialNetwork.WebUI
             services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<CustomIdentityDbContext>(options =>
-                options.UseSqlServer(@"Data Source=DESKTOP-GLFPTE3\MSSQLSERVER01;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+                options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SocialDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
 
             services.AddIdentity<CustomIdentityUser, CustomIdentityRole>()
                 .AddEntityFrameworkStores<CustomIdentityDbContext>()
