@@ -12,6 +12,7 @@ namespace SocialNetwork.Business.Abstract
         List<Notification> GetList(int id);
         void Add(Notification notification);
         void Update(Notification notification);
-        void Remove(Notification notification);
+        void Remove(int id);
+        //Notification GetById(int id);
     }
 }

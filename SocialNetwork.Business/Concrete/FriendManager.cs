@@ -14,14 +14,21 @@ namespace SocialNetwork.Business.Concrete
     {
         private readonly IFriendDal _friendDal;
 
-        public FriendManager(IFriendDal friendDal)
-        {
-            _friendDal = friendDal;
-        }
 
-        public bool CheckFriend(int userId, int friendId)
-        {
-            return _friendDal.CheckFriend(userId, friendId);
-        }
+        public FriendManager(IFriendDal friendDal) { _friendDal = friendDal; }
+
+
+
+        public void Add(Friend friend) { _friendDal.Add(friend); }
+
+        public bool CheckFriend(int userId, int friendId) => _friendDal.CheckFriend(userId, friendId);
+
+        public List<Friend> GetAll() => _friendDal.GetList();
+
+        public Friend GetById(int id) => _friendDal.GetList().FirstOrDefault(f => f.FriendId == id);
+
+        public void Remove(Friend friend) { _friendDal.Delete(friend); }
+
+        public void Update(Friend friend) { _friendDal.Update(friend); }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialNetwork.Business.Abstract;
@@ -30,6 +32,24 @@ namespace SocialNetwork.WebUI.Controllers
             return Ok(notifications);
         }
 
+        [HttpGet]
+        public IActionResult AddFriend(int id, int notId)
+        {
+            _friendService.Add(new Friend()
+            {
+                UserId = HomeController.User.Id,
+                FriendId = id
+            });
+            _friendService.Add(new Friend()
+            {
+                UserId = id,
+                FriendId = HomeController.User.Id
+            });
+            _notificationService.Remove(notId);
+
+            return Ok();
+        }
+
         [HttpPost]
         public IActionResult AddNotification(string notificationInJson)
         {
@@ -39,14 +59,38 @@ namespace SocialNetwork.WebUI.Controllers
             notification.SenderUserId = HomeController.User.Id;
             notification.SendDate = DateTime.Now;
             _notificationService.Add(notification);
+
+            return Redirect("/Home/Index");
+        }
+
+        [HttpPost]
+        public IActionResult RemoveNotification(int notId)
+        {
+            _notificationService.Remove(notId);
             
-            return Ok();
+            return Redirect("/Home/Index");
         }
 
         [HttpGet]
         public IActionResult GetUsers()
         {
             return Ok(_userService.GetAll());
+        }
+
+        [HttpGet]
+        public IActionResult GetFriends()
+        {
+            List<Friend> friends = new List<Friend>();
+            List<User> users = new List<User>();
+            for (int i = 0; i < friends.Count; i++)
+            {
+                if (friends[i].UserId == HomeController.User.Id)
+                {
+                    users.Add(_userService.GetById(friends[i].FriendId));
+                }
+            }
+
+            return Ok(users);
         }
     }
 }

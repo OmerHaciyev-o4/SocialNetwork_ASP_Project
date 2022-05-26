@@ -59,7 +59,7 @@
 
             @*TODO: Notification Button (Current time not. show or hide for)*@
             <span class="p-2 pointer text-center ms-auto menu-icon " id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="dot-count bg-warning"></span>
+                <span class="dot-count bg-warning d-none" id="firstNotDot"></span>
                 <i class="feather-bell font-xl text-current"></i>
             </span>
 
@@ -102,7 +102,7 @@
             <a class="p-0 ms-3 menu-icon" asp-controller="Home" asp-action="Settings">
                 @if (string.IsNullOrEmpty(HomeController.User.ImageUrl))
                 {
-                    <img src="/assets/images/defaultImage.png" alt="@HomeController.User.Username Image" class="w40 mt--1 rounded-xxxl">
+                    <img src="/images/defaultImage.png" alt="@HomeController.User.Username Image" class="w40 mt--1 rounded-xxxl">
                 }
                 else
                 {
@@ -139,11 +139,11 @@
 
                         @*TODO: D.L left third panel*@
                         <div class="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1">
-                            <div class="nav-caption fw-600 font-xssss text-grey-500"><span></span> Account</div>
+                            <div class="nav-caption fw-600 font-xssss text-grey-500"><span></span>Account</div>
                             <ul class="mb-1">
                                 <li class="logo d-none d-xl-block d-lg-block"></li>
                                 <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2 text-decoration-none" asp-controller="Home" asp-action="Settings"><i class="font-sm feather-settings me-3 text-grey-500"></i><span>Settings</span></a></li>
-                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2 text-decoration-none" asp-controller="Home" asp-action="Notification"><i class="font-sm feather-bell me-3 text-grey-500"></i><span>Notification</span></a></li>
+                                <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2 text-decoration-none" asp-controller="Home" asp-action="Notification"><i class="font-sm feather-bell me-3 text-grey-500"></i><span>Notification</span><span class="circle-count bg-warning mt-0" id="notBadge">0</span></a></li>
                                 <li><a class="nav-content-bttn open-font h-auto pt-2 pb-2 text-decoration-none" asp-controller="Home" asp-action="Chat"><i class="font-sm feather-message-square me-3 text-grey-500"></i><span>Chat</span><span class="circle-count bg-warning mt-0">23</span></a></li>
                             </ul>
                         </div>
@@ -327,7 +327,7 @@
             <a class="nav-content-bttn text-decoration-none" asp-controller="Home" asp-action="Settings">
                 @if (string.IsNullOrEmpty(HomeController.User.ImageUrl))
                 {
-                    <img src="/assets/images/defaultImage.png" alt="@HomeController.User.Username Image" class="w30 shadow-xss rounded-xxxl">
+                    <img src="/images/defaultImage.png" alt="@HomeController.User.Username Image" class="w30 shadow-xss rounded-xxxl">
                 }
                 else
                 {

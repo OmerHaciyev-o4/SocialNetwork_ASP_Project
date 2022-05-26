@@ -13,21 +13,25 @@ namespace SocialNetwork.Business.Concrete
     {
         private readonly INotificationDal _notificationDal;
 
+
         public NotificationManager(INotificationDal notificationDal)
         {
             _notificationDal = notificationDal;
         }
+
 
         public void Add(Notification notification)
         {
             _notificationDal.Add(notification);
         }
 
+        //public Notification GetById(int id) => _notificationDal.GetList().FirstOrDefault(not => not.Id == id);
+
         public List<Notification> GetList(int id) => _notificationDal.GetList().Where(not => not.ReceiveUserId == id).ToList();
 
-        public void Remove(Notification notification)
+        public void Remove(int id)
         {
-            _notificationDal.Delete(notification);
+            _notificationDal.Delete(_notificationDal.GetList().FirstOrDefault(not => not.Id == id));
         }
 
         public void Update(Notification notification)
