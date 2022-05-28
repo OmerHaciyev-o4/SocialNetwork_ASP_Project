@@ -22,13 +22,10 @@ namespace SocialNetwork.WebUI.Controllers
         }
         
         [HttpGet]
-        public IActionResult GetNotification(string data = null)
+        public IActionResult GetNotification()
         {
             var notifications = _notificationService.GetList(HomeController.User.Id);
-            if (!string.IsNullOrEmpty(data))
-            {
-                notifications.Sort((x, y) => DateTime.Compare(x.SendDate, y.SendDate));
-            }
+            notifications.Sort((x, y) => DateTime.Compare(x.SendDate, y.SendDate));
             return Ok(notifications);
         }
 
@@ -80,7 +77,7 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpGet]
         public IActionResult GetFriends()
         {
-            List<Friend> friends = new List<Friend>();
+            List<Friend> friends = _friendService.GetAll();
             List<User> users = new List<User>();
             for (int i = 0; i < friends.Count; i++)
             {

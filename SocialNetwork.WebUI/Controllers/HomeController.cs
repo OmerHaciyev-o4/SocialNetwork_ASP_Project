@@ -127,7 +127,7 @@ namespace SocialNetwork.WebUI.Controllers
                                 ResourceType = ResourceType.Image
                             }).Result;
                         }
-
+                        //TODO: Before default time button hiden and if image path default img selected Cloud not upload.
                         string imgPath = ImageHelper.GetURL(_webHost, model.File, currentUserDb.Id, "front");
 
                         var uploadImage = new ImageUploadParams()
