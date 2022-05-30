@@ -47,10 +47,14 @@ namespace SocialNetwork.WebUI
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IFriendService, FriendManager>();
             services.AddScoped<INotificationService, NotificationManager>();
+            services.AddScoped<IPostService, PostManager>();
+            services.AddScoped<IPostImageService, PostImageManager>();
 
             services.AddScoped<IUserDal, EfUserDal>();
             services.AddScoped<IFriendDal, EfFriendDal>();
             services.AddScoped<INotificationDal, EFNotificationDal>();
+            services.AddScoped<IPostDal, EfPostDal>();
+            services.AddScoped<IPostImageDal, EfPostImageDal>();
 
 
             services.AddAutoMapper(typeof(Startup));

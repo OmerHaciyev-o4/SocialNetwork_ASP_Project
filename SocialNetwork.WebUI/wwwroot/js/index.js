@@ -1,8 +1,7 @@
-﻿//imgupload
-//selectedData
-//result.src = URL.createObjectURL(event.target.files[0]);
-var uniqueIds = [];
+﻿var uniqueIds = [];
 var selectedDatas = [];
+var CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/social-network-web/upload";
+var CLOUDINARY_UPLOAD_PRESET = 'nihp1wvs';
 
 function RandomId() {
     var count = 0;
@@ -43,6 +42,7 @@ $("#imgupload").change(function (e) {
     var content = "";
     for (var i = selectedDatas.length - 1; i >= 0 ; i--) {
         var data = selectedDatas[i];
+        console.log(data);
         if (data != null) {
             var id = RandomId();
             var item = `<div class="card w-100 shadow-xss rounded-xxxl p-1 mt-2 flex-row flex-wrap" id="${id}" name="${data.name}">
@@ -68,74 +68,270 @@ $("#imgupload").change(function (e) {
     }
 });
 
-function SharePost() {
-    //with function get hash tags !!!!!
+function getData(formData) { 
+    return axios({
+        url: CLOUDINARY_URL,
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: formData
+    });
+};
+
+async function SharePost() {
+    console.log("Geldi");
+    var postData = document.getElementById("message").value;
 
     var postObj = {
-        postMessage: "",
-        HashTag: "",
         SharedUserId: 0,
-        Status: true,
+        PostMessage: postData,
         DataList: []
     };
+    var addedCount = 0;
 
-    var tempByteArray = [];
     for (var i = 0; i < selectedDatas.length; i++) {
-        var data = selectedDatas[i];
-        console.log(data);
+        var formData = new FormData();
+        formData.append('file', selectedDatas[i]);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        var res = await getData(formData);
+        var type = selectedDatas[i].type.split('/')[0];
+        postObj.DataList.push(`${res.data.url}~${type}`);
+        addedCount++;
+    }
 
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(data);
-        reader.onloadend = (evt) => {
-            if (evt.target.readyState === FileReader.DONE) {
-                const arrayBuffer = evt.target.result, array = new Uint8Array(arrayBuffer);
-                for (const a of array) {
-                    tempByteArray.push(a);
-                }
-                postObj.DataList.push(tempByteArray);
-                console.log(tempByteArray);
-                tempByteArray = [];
+    if (addedCount == selectedDatas.length) {
+        console.log(postObj);
+
+        $.ajax({
+            url: `/Database/NewPost`,
+            type: 'POST',
+            dataType: "json",
+            data: postObj,
+            success : function(response) {
+                console.log("Yes");
+            },
+            error: function (err) {
+                console.log("NO :(((((");
             }
+        });
+
+        document.getElementById("imgupload").value = "";
+        document.getElementById("message").value = "";
+        document.getElementById("selectedData").innerHTML = "";
+    }
+}
+
+function kFormatter(num) {
+    return Math.abs(num) > 999 ? Math.sign(num) * ((Math.abs(num) / 1000).toFixed(1)) + 'K' : Math.sign(num) * Math.abs(num)
+}
+
+function DeleteRating(postId, status) {
+    $.ajax({
+        type: 'POST',
+        url: `/Database/UpdateRating?data=${postId}~${status}`,
+        success: function (data) {
+            $.ajax({
+                url: "/Database/GetPosts",
+                method: "GET",
+                success: function (usersPosts) {
+                    ImplementPosts(usersPosts, usersPosts.length);
+
+                    document.getElementById(`${postId}LikeBtn`).onclick = function () {
+                        AddRating(postId, "add");
+                    };
+
+                    console.log(document.getElementById(`${postId}LikeBtn`));
+                },
+                error: function (error) { }
+            });
+        },
+        error: function (errorMessage) {
+            console.log(errorMessage);
+        }
+    });
+}
+
+function AddRating(postId, status) {
+    $.ajax({
+        type: 'POST',
+        url: `/Database/UpdateRating?data=${postId}~${status}`,
+        success: function (data) {
+            $.ajax({
+                url: "/Database/GetPosts",
+                method: "GET",
+                success: function (usersPosts) {
+                    ImplementPosts(usersPosts, usersPosts.length);
+
+                    document.getElementById(`${postId}LikeBtn`).onclick = function () {
+                        DeleteRating(postId, "delete");
+                    };
+                    console.log(document.getElementById(`${postId}LikeBtn`));
+                },
+                error: function (error) { }
+            });
+        },
+        error: function (errorMessage) {
+            console.log(errorMessage);
+        }
+    });
+}
+
+function ImplementPosts(usersPosts, postCount) {
+    var content = "";
+    for (var i = 0; i < usersPosts.length; i++) {
+        var userVM = usersPosts[i];
+        var imgPath = userVM.user.imageUrl;
+        if (userVM.user.imageUrl == null) { imgPath = "/images/defaultImage.png"; }
+
+        for (var j = 0; j < userVM.posts.length; j++) {
+            var postVM = userVM.posts[j];
+            var timeDifference = calcuteDate(new Date(postVM.post.datePost.toString()), new Date());
+
+            var postViewCode =
+                `<div class="card w-100 shadow-xss rounded-xxl border-0 p-4 pb-0 mb-3">
+                    <div class="card-body p-0 d-flex">
+                        <figure class="avatar me-3">
+                            <img src="${imgPath}" alt="${userVM.user.username}" class="shadow-sm rounded-circle w45" />
+                        </figure>
+                        <a href="/Home/Profile?id=${userVM.user.id}" class="text-dark fw-bold open-font mt-1 text-decoration-none">${userVM.user.username}
+                            <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${timeDifference} ago</span>
+                        </a>
+                        <div class="ms-auto pointer">
+                            <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 me-lg-5">
+                        <p class="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">${postVM.post.message}</p>
+                    </div>
+                    <div class="card-body d-block p-0 mb-3">
+                        <div class="row ps-2 pe-2">`;
+
+            if (postVM.postImages.length == 1) {
+                if (postVM.postImages[0].postImageType == "image") {
+                    postViewCode += `
+                        <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[0].postId})">
+                            <img src="${postVM.postImages[0].postImageURL}" class="rounded-3 w-100"/>
+                        </div>
+                    </div>`;
+                }
+                else if (postVM.postImages[0].postImageType == "video") {
+                    postViewCode += `
+                        <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[0].postId})">
+                            <video  class="vjs-tech rounded-xxxl" style="width: 100%; height: auto;" controls>
+                                <source src="${postVM.postImages[0].postImageURL}">
+                            </video>
+                        </div>
+                    </div>`;
+                }
+            }
+            else if (postVM.postImages.length == 2) {
+                for (var k = 0; k < postVM.postImages.length; k++) {
+                    if (postVM.postImages[k].postImageType == "image") {
+                        postViewCode += `
+                                    <div class="col-xs-6 col-sm-6 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
+                                        <img src="${postVM.postImages[k].postImageURL}" class="rounded-3 w-100"/>
+                                    </div>`;
+                    }
+                    else if(postVM.postImages[k].postImageType == "video") {
+                        postViewCode += `
+                            <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
+                                <video  class="vjs-tech" style="width: 100%; height: auto;" controls>
+                                    <source src="${postVM.postImages[k].postImageURL}">
+                                </video>
+                            </div>`;
+                    }
+                }
+                postViewCode += `</div>`;
+            }
+            else if (postVM.postImages.length >= 3) {
+                for (var k = 0; k < 2; k++) {
+                    if (postVM.postImages[k].postImageType == "image") {
+                        postViewCode += `
+                                    <div class="col-xs-6 col-sm-6 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
+                                        <img src="${postVM.postImages[k].postImageURL}" class="rounded-3 w-100"/>
+                                    </div>`;
+                    }
+                    else if (postVM.postImages[k].postImageType == "video") {
+                        postViewCode += `
+                            <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
+                                <video  class="vjs-tech" style="width: 100%; height: auto;" controls>
+                                    <source src="${postVM.postImages[k].postImageURL}">
+                                </video>
+                            </div>`;
+                    }
+                }
+
+                if (postVM.postImages[2].postImageType == "image") {
+                    postViewCode += `<div class="col-xs-4 col-sm-4 p-1">
+                                        <a class="position-relative d-block" href="#ClodinaryHref" data-lightbox="roadtrip">
+                                            <img src="${postVM.postImages[2]}" class="rounded-3 w-100" alt="post" />
+                                            <span class="img-count font-sm text-white ls-3 fw-600">
+                                                <b>+${Number(postVM.postImage.length - 2)}</b>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>`;
+                }
+                else if (postVM.postImages[2].postImageType == "video") {
+                    postViewCode += `<div class="col-xs-12 col-sm-12 p-1">
+                                        <a class="position-relative d-block" href="#ClodinaryHref" data-lightbox="roadtrip">
+                                            <video  class="vjs-tech" style="width: 100%; height: auto;">
+                                                <source src="${postVM.postImages[2].postImageURL}">
+                                            </video>
+                                            <span class="img-count font-sm text-white ls-3 fw-600">
+                                                <b>+${Number(postVM.postImages.length - 2)}</b>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>`;
+                }
+                //postViewCode += `
+                //    <div class="col-xs-4 col-sm-4 p-1">
+                //        <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
+                //    </div>
+                //    <div class="col-xs-4 col-sm-4 p-1">
+                //        <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
+                //    </div>
+                //    <div class="col-xs-4 col-sm-4 p-1">
+                //        <a class="position-relative d-block" href="#ClodinaryHref" data-lightbox="roadtrip">
+                //            <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
+                //            <span class="img-count font-sm text-white ls-3 fw-600">
+                //                <b>+${Number(postVM.postImage.length - 2)}</b>
+                //            </span>
+                //        </a>
+                //    </div>
+                //</div>`;
+            }
+
+            var rating = postVM.post.rating.toString();
+            if (postVM.post.rating >= 1000) {
+                rating = kFormatter(postVM.post.rating);
+            }
+
+            postViewCode += `
+                <div class="card-body d-flex p-0">
+                    <div class="emoji-bttn pointer d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2">
+                        <i id="${postVM.post.id}LikeBtn" class="feather-heart text-white bg-red-gradiant me-2 btn-round-xs font-xss" onclick="AddRating('${postVM.post.id}', 'add')"></i>${rating} Like
+                    </div>
+                    <a class="d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss text-decoration-none">
+                        <i class="feather-message-circle text-dark text-grey-900 btn-round-sm font-lg"></i>
+                        <span class="d-none-xss">0 Comment</span>
+                    </a>
+                    <div class="pointer ms-auto d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss" id="dropdownMenu32" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="feather-share-2 text-grey-900 text-dark btn-round-sm font-lg"></i>
+                        <span class="d-none-xs">Share</span>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+            content += postViewCode;
         }
     }
 
-    console.log(postObj.DataList);
-
-    //$.ajax({
-    //    url: `/Database/NewPost?post=${JSON.stringify(postObj)}`,
-    //    method: "POST"
-    //});
+    document.getElementById("posts").innerHTML = content;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function calcuteDate(sendDate, today) {
     var year = today.getYear() - sendDate.getYear();
@@ -154,21 +350,18 @@ function calcuteDate(sendDate, today) {
                         }
                         return second + "s";
                     }
-                    return minute + "m";
+                    return minute + "min";
                 }
                 return hour + "h";
             }
             else if (day == 1) {
                 return "Yesterday";
             }
-            else if ((day / 7) % 2 == 1) {
-                return (day / 7) + "w";
-            }
-            return day + "d";
+            return `${sendDate.getDay()}/${sendDate.getMonth()}/${sendDate.getYear()}`;
         }
-        return month + "m";
+        return `${sendDate.getDay()}/${sendDate.getMonth()}/${sendDate.getYear()}`;
     }
-    return year + "y";
+    return `${sendDate.getDay()}/${sendDate.getMonth()}/${sendDate.getYear()}`;
 }
 
 function GetNotification() {
@@ -288,6 +481,26 @@ function GetNotification() {
             error: function (err) {
                 console.log(err);
             }
+        });
+
+        $.ajax({
+            url: "/Database/GetPosts",
+            method: "GET",
+            success: function (usersPosts) {
+                var postCount = 0;
+                for (var i = 0; i < usersPosts.length; i++) {
+                    postCount += usersPosts[i].posts.length;
+                }
+                var currentPostsCount = document.getElementById("posts").children.length;
+
+
+                if (postCount != currentPostsCount) {
+                    console.log(currentPostsCount);
+                    console.log(postCount);
+                    ImplementPosts(usersPosts, usersPosts.length);
+                }
+            },
+            error: function(error) {}
         });
     }, 1000);
 }

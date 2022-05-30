@@ -178,6 +178,8 @@ namespace SocialNetwork.WebUI.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.PostMessage = TempData["PostMessage"];
+
             return View();
         }
 

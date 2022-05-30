@@ -1,7 +1,28 @@
 ﻿function SideBarOpeningFunc() {
-    window.innerWidth > 1600
-        ? document.getElementById('main-content-wrap').classList.add('active-sidebar')
-        : document.getElementById('main-content-wrap').classList.remove('active-sidebar');
+    console.log("dsfsdfsadfasf");
+    var classList = document.getElementById("renderPanel").classList;
+    var st = true;
+
+    for (var i = 0; i < classList.length; i++) {
+        if (classList[i] == "right-chat-active") {
+            st = false;
+            break;
+        }
+    }
+
+    console.log(st);
+    if (st) {
+        document.getElementById("renderPanel").classList.remove('right-chat-active');
+        document.getElementById("main-content-wrap").classList.remove('active-sidebar');
+    }
+    else if (!st) {
+        document.getElementById("renderPanel").classList.add('right-chat-active');
+        document.getElementById("main-content-wrap").classList.add('active-sidebar');
+    }
+
+    //window.innerWidth > 1600
+    //    ? document.getElementById('main-content-wrap').classList.add('active-sidebar')
+    //    : document.getElementById('main-content-wrap').classList.remove('active-sidebar');
 }
 
 function AddFollow(el, id) {
@@ -17,7 +38,31 @@ function AddFollow(el, id) {
     });
 }
 
-window.addEventListener('resize', SideBarOpeningFunc);
+//document.getElementById("chatIconDesk").addEventListener('click', function() {
+//    var classList = document.getElementById("renderPanel").classList;
+//    var st = true;
+
+//    for (var i = 0; i < classList.length; i++) {
+//        if (classList[i] == "right-chat-active") {
+//            st = false;
+//            break;
+//        }
+//    }
+
+//    console.log(st);
+//    if (st) {
+//        document.getElementById("renderPanel").classList.remove('right-chat-active');
+//        document.getElementById("main-content-wrap").classList.remove('active-sidebar');
+//    }
+//    else if (!st) {
+//        document.getElementById("renderPanel").classList.add('right-chat-active');
+//        document.getElementById("main-content-wrap").classList.add('active-sidebar');
+//    }
+
+//});
+//document.getElementById("chatIconMobile").addEventListener();
+
+//window.addEventListener('resize', SideBarOpeningFunc);
 
 document.getElementById('noDesktopSearch').onclick = function () {
     document.getElementById('smallSearchPanel').classList.add('show');
@@ -36,12 +81,34 @@ document.getElementById('leftSideBarBtn').onclick = function () {
         ? leftSideBar.classList.remove('nav-active')
         : leftSideBar.classList.add('nav-active');
 }
+document.getElementById("chatIconDesk").onclick = function() {
+    console.log("dsfsdfsadfasf");
+    var classList = document.getElementById("renderPanel").classList;
+    var st = true;
 
+    for (var i = 0; i < classList.length; i++) {
+        if (classList[i] == "right-chat-active") {
+            st = false;
+            break;
+        }
+    }
+
+    console.log(st);
+    if (st) {
+        document.getElementById("renderPanel").classList.remove('right-chat-active');
+        document.getElementById("main-content-wrap").classList.remove('active-sidebar');
+    }
+    else if (!st) {
+        document.getElementById("renderPanel").classList.add('right-chat-active');
+        document.getElementById("main-content-wrap").classList.add('active-sidebar');
+    }
+}
 
 document.getElementById('smallSearch').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
+        console.log("yesss");
         var splitedData = document.getElementById('searchPanel').value.toString()
-            .split(/[$&+,:;=?|'<>.\-^*()%!_\[\]\{\}\\\"/~\`\']/);
+            .split(/[$&+,:;=?|'<>\-^*()%!_\[\]\{\}\\\"/~\`\']/);
         var splitedDataRowFirst = splitedData[0].split(' ');
 
         var searcedDataObj = {};
@@ -76,7 +143,7 @@ document.getElementById('smallSearch').addEventListener('keydown', function (e) 
 
         setTimeout(function () {
             window.location = "/home/searchresult";
-        }, 500);
+        }, 800);
     }
 });
 document.getElementById('searchPanel').addEventListener('keydown', function (e) {
@@ -120,4 +187,5 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
         }, 800);
     }
 });
+
 

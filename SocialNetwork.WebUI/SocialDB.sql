@@ -57,16 +57,21 @@ create table GroupChats(
 	[Message] nvarchar(max)
 )
 
-
+drop table Posts
 
 CREATE TABLE Posts(
 	Id int primary key identity(1,1) not null,
 	IdUser int not null foreign key references Users(Id),
 	[Message] nvarchar(max),
-	[PostImage] nvarchar(max),
 	DatePost datetime2 not null default(sysdatetime()),
-	Rating float not null default(0)
+	Rating int not null default(0)
 )
+
+Create TABLE PostImages(
+	Id int primary key identity(1,1) not null,
+	PostId int not null foreign key references Posts(Id),
+	PostImageURL nvarchar(max),
+	PostImageType nvarchar(50))
 
 create table Histories(
 	[Id] int primary key identity(1,1) not null,
