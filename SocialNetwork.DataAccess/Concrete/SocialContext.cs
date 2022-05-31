@@ -20,5 +20,7 @@ namespace SocialNetwork.DataAccess.Concrete
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomCloud> RoomClouds { get; set; }
     }
 }

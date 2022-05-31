@@ -1,7 +1,14 @@
 ﻿@using SocialNetwork.WebUI.Controllers
+
+@{
+    string themeType = "theme-light";
+    if (HomeController.User.IsDarkMode)
+        themeType = "theme-dark";
+}
+
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -27,7 +34,7 @@
     <script src="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.js" type="text/javascript"></script>
 </head>
 
-<body class="color-theme-blue mont-font loaded theme-dark">
+<body class="color-theme-blue mont-font loaded @themeType">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div style="height: 100vh !important; overflow-y: scroll;">
         <div class="nav-header bg-white shadow-xs border-0">
@@ -39,8 +46,8 @@
                 </a>
 
                 @*TODO: No desktop layout time showed Chat panel icon*@
-                <a class="mob-menu ms-auto me-2 chat-active-btn" id="chatIconMobile"  onclick="SideBarOpeningFunc()">
-                    <i class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"  onclick="SideBarOpeningFunc()"></i>
+                <a class="mob-menu ms-auto me-2 chat-active-btn" id="chatIconMobile" onclick="SideBarOpeningFunc()">
+                    <i class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i>
                 </a>
                 
                 @*TODO: small search panel icon*@
@@ -97,7 +104,7 @@
             </div>
 
             @*TODO: Chat panel icon*@
-            <a class="p-2 text-center ms-3 menu-icon pointer chat-active-btn text-decoration-none" id="chatIconDesk">
+            <a class="p-2 text-center ms-3 menu-icon pointer chat-active-btn text-decoration-none" onclick="SideBarOpeningFunc()" id="chatIconDesk">
                 <i class="feather-message-square font-xl text-current"></i>
             </a>
 
@@ -219,61 +226,30 @@
             <div class="middle-sidebar-right-content bg-white shadow-xss rounded-xxl">
                 <div class="section full pe-3 ps-4 pt-4 position-relative feed-body">
                     <h4 class="font-xsssss text-grey-500 text-uppercase fw-700 ls-3">CONTACTS</h4>
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush" id="chatForFriends">
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-8.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Hurin Seary</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-7.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Victor Exrixon</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-6.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Surfiya Zakir</span></h3><span class="bg-warning ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-5.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Goria Coast</span></h3><span class="bg-danger ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-4.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Hurin Seary</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-3.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">David Goria</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-2.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Seary Victor</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <figure class="avatar float-left mb-0 me-2"><img src="/assets/images/user-12.png" alt="avater" class="w35"></figure>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Ana Seary</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
+                            <figure class="avatar float-left mb-0 me-2">
+                                <img src="/assets/images/user-8.png" alt="avater" class="w35">
+                            </figure>
+                            <h3 class="fw-700 mb-0 mt-0">
+                                <span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Hurin Seary</span>
+                            </h3>
+                            <span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                     </ul>
                 </div>
                 <div class="section full pe-3 ps-4 pt-4 pb-4 position-relative feed-body">
                     <h4 class="font-xsssss text-grey-500 text-uppercase fw-700 ls-3">GROUPS</h4>
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush d-none">
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
                             <span class="btn-round-sm bg-primary-gradiant me-3 ls-3 text-white font-xssss fw-700">UD</span>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Studio Express</span></h3><span class="badge mt-0 text-grey-500 badge-pill pe-0 font-xsssss">2 min</span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <span class="btn-round-sm bg-gold-gradiant me-3 ls-3 text-white font-xssss fw-700">AR</span>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Armany Design</span></h3><span class="bg-warning ms-auto btn-round-xss"></span>
-                        </li>
-                        <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
-                            <span class="btn-round-sm bg-mini-gradiant me-3 ls-3 text-white font-xssss fw-700">UD</span>
-                            <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">De fabous</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
                         </li>
                     </ul>
                 </div>
                 <div class="section full pe-3 ps-4 pt-0 pb-4 position-relative feed-body">
                     <h4 class="font-xsssss text-grey-500 text-uppercase fw-700 ls-3">Pages</h4>
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush d-none">
                         <li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
                             <span class="btn-round-sm bg-primary-gradiant me-3 ls-3 text-white font-xssss fw-700">AB</span>
                             <h3 class="fw-700 mb-0 mt-0"><span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">Armany Seary</span></h3><span class="bg-success ms-auto btn-round-xss"></span>
@@ -447,7 +423,9 @@
             a();
         })([]);
     </script>
-    <script src="~/static/js/2.82492619.chunk.js"></script>
-    <script src="~/js/site.js"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/static/js/2.82492619.chunk.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/registerUserChatHub.js"></script>
 </body>
 </html>

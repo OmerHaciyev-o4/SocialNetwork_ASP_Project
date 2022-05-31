@@ -179,7 +179,7 @@ function AddRating(postId, status) {
 
 function ImplementPosts(usersPosts, postCount) {
     var content = "";
-    for (var i = 0; i < usersPosts.length; i++) {
+    for (var i = usersPosts.length - 1; i >= 0 ; i--) {
         var userVM = usersPosts[i];
         var imgPath = userVM.user.imageUrl;
         if (userVM.user.imageUrl == null) { imgPath = "/images/defaultImage.png"; }
@@ -333,6 +333,19 @@ function ImplementPosts(usersPosts, postCount) {
     document.getElementById("posts").innerHTML = content;
 }
 
+function ConfirmNotification(senderId, myId, notId) {
+    $.ajax({
+        type: 'GET',
+        url: `/Database/AddFriend?senderId=${senderId}&myId=${myId}&notId=${notId}`
+    });
+}
+function CancelNotification(notId) {
+    $.ajax({
+        type: 'POST',
+        url: `/Database/RemoveNotification?notId=${notId}`
+    });
+}
+
 function calcuteDate(sendDate, today) {
     var year = today.getYear() - sendDate.getYear();
     if (year <= 0) {
@@ -385,17 +398,20 @@ function GetNotification() {
                         else { imgPath = users[i].imageUrl; }
 
                         let user = `
-                        <div class="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3 mb-3" id="${users[i].id}">
+                        <div class="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3 mb-3" id="${
+                            users[i].id}">
                             <figure class="avatar me-2 mb-0">
-                                <img src="${imgPath}" alt="${users[i].username}" class="shadow-sm rounded-circle w45" />
+                                <img src="${imgPath}" alt="${users[i].username
+                            }" class="shadow-sm rounded-circle w45" />
                             </figure>
                             <h4 class="fw-700 text-grey-900 font-xssss mt-2 text-decoration-none">@${users[i].username}
                                 <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">NaN</span>
                             </h4>
-                            <a href="/Home/Profile" class="btn-round-sm bg-white ms-auto mt-2 text-decoration-none">
+                            <a href="/Home/Profile?id=${users[i].id
+                            }" class="btn-round-sm bg-white ms-auto mt-2 text-decoration-none">
                                 <span class="feather-chevron-right font-xss text-grey-900"></span>
                             </a>
-                        </div>`
+                        </div>`;
 
                         content += user;
                     }
@@ -410,6 +426,7 @@ function GetNotification() {
             url: "/Database/GetNotification",
             method: "GET",
             success: function (notifications) {
+                console.log(notifications);
                 var notCount = notifications.length;
 
                 if (notCount == 0) {
@@ -461,8 +478,8 @@ function GetNotification() {
                                                                   </h4>
                                                               </div>
                                                               <div class="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                                                  <a href="/Database/AddFriend?id=${users[j].id}&notId=${notifications[i].id}" class="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Confirm</a>
-                                                                  <a href="/Database/RemoveNotification?notId=${notifications[i].id}" class="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Delete</a>
+                                                                  <a onclick="ConfirmNotification(${users[j].id}, ${notifications[i].receiveUserId}, ${notifications[i].id})" class="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Confirm</a>
+                                                                  <a onclick="CancelNotification(${notifications[i].id}) class="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Delete</a>
                                                               </div>
                                                             </div>`;
                                             content += request;
@@ -502,7 +519,7 @@ function GetNotification() {
             },
             error: function(error) {}
         });
-    }, 1000);
+    }, 500);
 }
 
 GetNotification();

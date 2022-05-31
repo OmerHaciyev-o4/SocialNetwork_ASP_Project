@@ -27,5 +27,7 @@ namespace SocialNetwork.Social.Entities.Concrete
         public string Password { get; set; }
         public int Follow { get; set; }
         public int Following { get; set; }
+        public DateTime LastActiveDate { get; set; }
+        public bool IsDarkMode { get; set; }
     }
 }

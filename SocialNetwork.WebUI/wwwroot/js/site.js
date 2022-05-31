@@ -1,28 +1,26 @@
 ﻿function SideBarOpeningFunc() {
     console.log("dsfsdfsadfasf");
     var classList = document.getElementById("renderPanel").classList;
-    var st = true;
+    var st = false;
 
     for (var i = 0; i < classList.length; i++) {
         if (classList[i] == "right-chat-active") {
-            st = false;
+            st = true;
             break;
         }
     }
 
     console.log(st);
     if (st) {
+        console.log("remove");
         document.getElementById("renderPanel").classList.remove('right-chat-active');
         document.getElementById("main-content-wrap").classList.remove('active-sidebar');
     }
     else if (!st) {
+        console.log("add");
         document.getElementById("renderPanel").classList.add('right-chat-active');
         document.getElementById("main-content-wrap").classList.add('active-sidebar');
     }
-
-    //window.innerWidth > 1600
-    //    ? document.getElementById('main-content-wrap').classList.add('active-sidebar')
-    //    : document.getElementById('main-content-wrap').classList.remove('active-sidebar');
 }
 
 function AddFollow(el, id) {
@@ -31,14 +29,35 @@ function AddFollow(el, id) {
         "ReceiveUserId": Number(id)
     }
 
-
     $.ajax({
         url: `/Database/AddNotification?notificationInJson=${JSON.stringify(notObj)}`,
-        method: "POST"
+        method: "POST",
+        success: function() {
+            el.onclick = function() {};
+        }
     });
 }
 
-//document.getElementById("chatIconDesk").addEventListener('click', function() {
+
+document.getElementById('noDesktopSearch').onclick = function () {
+    document.getElementById('smallSearchPanel').classList.add('show');
+}
+document.getElementById('smallSearchCloseBtn').onclick = function () {
+    document.getElementById('smallSearchPanel').classList.remove('show');
+}
+
+document.getElementById('leftSideBarBtn').onclick = function () {
+    this.className.toString() === "nav-menu me-0 ms-2 active"
+        ? this.classList.remove('active')
+        : this.classList.add('active');
+
+    var leftSideBar = document.getElementById('leftSideBar');
+    leftSideBar.className === "navigation scroll-bar nav-active"
+        ? leftSideBar.classList.remove('nav-active')
+        : leftSideBar.classList.add('nav-active');
+}
+//document.getElementById("chatIconDesk").onclick = function() {
+//    console.log("dsfsdfsadfasf");
 //    var classList = document.getElementById("renderPanel").classList;
 //    var st = true;
 
@@ -58,51 +77,7 @@ function AddFollow(el, id) {
 //        document.getElementById("renderPanel").classList.add('right-chat-active');
 //        document.getElementById("main-content-wrap").classList.add('active-sidebar');
 //    }
-
-//});
-//document.getElementById("chatIconMobile").addEventListener();
-
-//window.addEventListener('resize', SideBarOpeningFunc);
-
-document.getElementById('noDesktopSearch').onclick = function () {
-    document.getElementById('smallSearchPanel').classList.add('show');
-}
-document.getElementById('smallSearchCloseBtn').onclick = function () {
-    document.getElementById('smallSearchPanel').classList.remove('show');
-}
-
-document.getElementById('leftSideBarBtn').onclick = function () {
-    this.className.toString() === "nav-menu me-0 ms-2 active"
-        ? this.classList.remove('active')
-        : this.classList.add('active');
-
-    var leftSideBar = document.getElementById('leftSideBar');
-    leftSideBar.className === "navigation scroll-bar nav-active"
-        ? leftSideBar.classList.remove('nav-active')
-        : leftSideBar.classList.add('nav-active');
-}
-document.getElementById("chatIconDesk").onclick = function() {
-    console.log("dsfsdfsadfasf");
-    var classList = document.getElementById("renderPanel").classList;
-    var st = true;
-
-    for (var i = 0; i < classList.length; i++) {
-        if (classList[i] == "right-chat-active") {
-            st = false;
-            break;
-        }
-    }
-
-    console.log(st);
-    if (st) {
-        document.getElementById("renderPanel").classList.remove('right-chat-active');
-        document.getElementById("main-content-wrap").classList.remove('active-sidebar');
-    }
-    else if (!st) {
-        document.getElementById("renderPanel").classList.add('right-chat-active');
-        document.getElementById("main-content-wrap").classList.add('active-sidebar');
-    }
-}
+//}
 
 document.getElementById('smallSearch').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {

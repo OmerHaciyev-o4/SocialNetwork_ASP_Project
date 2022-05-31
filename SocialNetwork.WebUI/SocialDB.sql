@@ -19,7 +19,8 @@ CREATE TABLE Users(
 	[Password] nvarchar(200) not null,
 	Follow int not null default(0),
 	[Following] int not null default(0),
-	IsLogined bit
+	LastActiveDate datetime2 null,
+	IsDarkMode bit null
 )
 
 Create Table [Notifications](
@@ -34,6 +35,34 @@ Create Table Friends(
 	[Id] int primary key identity(1,1) not null,
 	[FriendId] int not null foreign key references Users(Id),
 	[UserId] int not null foreign key references Users(Id))
+
+CREATE TABLE Posts(
+	Id int primary key identity(1,1) not null,
+	IdUser int not null foreign key references Users(Id),
+	[Message] nvarchar(max),
+	DatePost datetime2 not null default(sysdatetime()),
+	Rating int not null default(0)
+)
+
+Create TABLE PostImages(
+	Id int primary key identity(1,1) not null,
+	PostId int not null foreign key references Posts(Id),
+	PostImageURL nvarchar(max),
+	PostImageType nvarchar(50))
+
+Create Table Rooms(
+	Id int primary key identity(1, 1) not null,
+	[MId] int not null foreign key references Users(Id),
+	[FId] int not null foreign key references Users(Id))
+
+Create Table RoomClouds(
+	Id int primary key identity(1, 1) not null,
+	RoomId int not null foreign key references Rooms(Id),
+	MyId int not null foreign key references Users(Id),
+	FriendId int not null foreign key references Users(Id),
+	[Message] nvarchar(max) not null,
+	[SendDate] datetime2 default(sysdatetime()))
+
 
 
 
@@ -57,21 +86,9 @@ create table GroupChats(
 	[Message] nvarchar(max)
 )
 
-drop table Posts
 
-CREATE TABLE Posts(
-	Id int primary key identity(1,1) not null,
-	IdUser int not null foreign key references Users(Id),
-	[Message] nvarchar(max),
-	DatePost datetime2 not null default(sysdatetime()),
-	Rating int not null default(0)
-)
 
-Create TABLE PostImages(
-	Id int primary key identity(1,1) not null,
-	PostId int not null foreign key references Posts(Id),
-	PostImageURL nvarchar(max),
-	PostImageType nvarchar(50))
+
 
 create table Histories(
 	[Id] int primary key identity(1,1) not null,

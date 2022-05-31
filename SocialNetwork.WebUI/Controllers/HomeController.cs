@@ -51,6 +51,7 @@ namespace SocialNetwork.WebUI.Controllers
             var username = _userManager.Users.FirstOrDefault(u => u.Id == userId).UserName;
 
             User = _userService.GetByUsername(username);
+            User.IsDarkMode = true;
 
             var myAccount = new Account(apiKey: "392371254347452", apiSecret: "7qwJgIJnuMdrYhtOVgj4TxQ2yNQ", cloud: "social-network-web");
             _cloudinary = new Cloudinary(myAccount);
@@ -152,8 +153,9 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
-        public IActionResult Chat()
+        public IActionResult Chat(int id)
         {
+
             return View();
         }
         

@@ -22,6 +22,7 @@ using SocialNetwork.DataAccess.Concrete;
 using SocialNetwork.Social.Entities.Concrete;
 using SocialNetwork.WebUI.Controllers;
 using SocialNetwork.WebUI.Entities;
+using SocialNetwork.WebUI.Hubs;
 
 namespace SocialNetwork.WebUI
 {
@@ -49,13 +50,19 @@ namespace SocialNetwork.WebUI
             services.AddScoped<INotificationService, NotificationManager>();
             services.AddScoped<IPostService, PostManager>();
             services.AddScoped<IPostImageService, PostImageManager>();
+            services.AddScoped<IRoomService, RoomManager>();
+            services.AddScoped<IRoomCloudService, RoomCloudManager>();
 
             services.AddScoped<IUserDal, EfUserDal>();
             services.AddScoped<IFriendDal, EfFriendDal>();
             services.AddScoped<INotificationDal, EFNotificationDal>();
             services.AddScoped<IPostDal, EfPostDal>();
             services.AddScoped<IPostImageDal, EfPostImageDal>();
+            services.AddScoped<IRoomDal, EfRoomDal>();
+            services.AddScoped<IRoomCloudDal, EfRoomCloudDal>();
 
+            services.AddSignalR();
+            services.AddHttpContextAccessor();
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -120,6 +127,7 @@ namespace SocialNetwork.WebUI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=home}/{action=index}/{id?}");
+                endpoints.MapHub<RegisterUserChatHub>("/registeruserchathub");
             });
         }
     }

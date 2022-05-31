@@ -104,7 +104,7 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpPost]
         public IActionResult AddNotification(string notificationInJson)
         {
-            int i = 0;
+            Thread.Sleep(1000);
 
             var notification = JsonConvert.DeserializeObject<Notification>(notificationInJson);
             notification.SenderUserId = HomeController.User.Id;
@@ -117,6 +117,8 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpPost]
         public IActionResult RemoveNotification(int notId)
         {
+            Thread.Sleep(1000);
+
             _notificationService.Remove(notId);
 
             return Redirect("/Home/Index");
@@ -175,18 +177,22 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddFriend(int id, int notId)
+        public IActionResult AddFriend(int senderId, int myId, int notId)
         {
-            _friendService.Add(new Friend()
+            var meToFriend = new Friend()
             {
-                UserId = HomeController.User.Id,
-                FriendId = id
-            });
-            _friendService.Add(new Friend()
+                UserId = myId,
+                FriendId = senderId
+            };
+
+            var friendToMe = new Friend()
             {
-                UserId = id,
-                FriendId = HomeController.User.Id
-            });
+                UserId = senderId,
+                FriendId = myId
+            };
+
+            _friendService.Add(meToFriend);
+            _friendService.Add(friendToMe);
             _notificationService.Remove(notId);
 
             return Ok();
