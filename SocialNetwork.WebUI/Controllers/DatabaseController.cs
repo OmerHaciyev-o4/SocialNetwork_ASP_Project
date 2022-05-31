@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialNetwork.Business.Abstract;
 using SocialNetwork.Social.Entities.Concrete;
+using SocialNetwork.WebUI.Entities;
 using SocialNetwork.WebUI.Models;
 
 namespace SocialNetwork.WebUI.Controllers
@@ -19,9 +23,11 @@ namespace SocialNetwork.WebUI.Controllers
         private INotificationService _notificationService;
         private IPostService _postService;
         private IPostImageService _postImageService;
+        private UserManager<CustomIdentityUser> _userManager;
         private Cloudinary _cloudinary;
+        public static HttpContext Context { get; set; }
 
-        public DatabaseController(IUserService userService, IFriendService friendService, INotificationService notificationService, IPostService postService, IPostImageService postImageService)
+        public DatabaseController(IUserService userService, IFriendService friendService, INotificationService notificationService, IPostService postService, IPostImageService postImageService, UserManager<CustomIdentityUser> userManager)
         {
             _userService = userService;
             _friendService = friendService;
@@ -31,14 +37,41 @@ namespace SocialNetwork.WebUI.Controllers
 
             var myAccount = new Account(apiKey: "392371254347452", apiSecret: "7qwJgIJnuMdrYhtOVgj4TxQ2yNQ", cloud: "social-network-web");
             _cloudinary = new Cloudinary(myAccount);
+            _userManager = userManager;
         }
 
         [HttpGet]
         public IActionResult GetNotification()
         {
-            var notifications = _notificationService.GetList(HomeController.User.Id);
+            var notifications = _notificationService.GetList();
             notifications.Sort((x, y) => DateTime.Compare(x.SendDate, y.SendDate));
+            List<NotificationViewModel> notificationViewModels = new List<NotificationViewModel>();
+            foreach (var notification in notifications)
+            {
+                var senderUser = _userService.GetById(notification.SenderUserId);
+                var receiveUser = _userService.GetById(notification.ReceiveUserId);
+                notificationViewModels.Add(new NotificationViewModel()
+                {
+                    SenderUser = senderUser,
+                    ReceiverUser = receiveUser,
+                    Notification = notification
+                });
+            }
+
             return Ok(notifications);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var identityUser = await _userManager.GetUserAsync(HttpContext.User);
+            if (identityUser != null)
+            {
+                var user = _userService.GetByUsername(identityUser.UserName);
+                return Ok(user);
+            }
+
+            return Ok();
         }
         
         [HttpGet]
@@ -62,6 +95,7 @@ namespace SocialNetwork.WebUI.Controllers
             for (int i = 0; i < friends.Count; i++)
             {
                 var friendPosts = _postService.GetAll(friends[i].Id);
+                //friendPosts = friendPosts.OrderByDescending(p => p.DatePost).ToList();
                 if (friendPosts.Count > 0)
                 {
                     var friendPostsVM = new UserPostViewModel() { User = friends[i] };
@@ -77,6 +111,7 @@ namespace SocialNetwork.WebUI.Controllers
                     }
                     posts.Add(friendPostsVM);
                 }
+                
             }
 
             var myPosts = _postService.GetAll(HomeController.User.Id);
@@ -97,6 +132,10 @@ namespace SocialNetwork.WebUI.Controllers
                 posts.Add(myPostsVM);
             }
 
+            //foreach (var item in posts)
+            //{
+            //    item.Posts = item.Posts.OrderByDescending(x => x.Post.DatePost).ToList();
+            //}
             return Ok(posts);
         }
 

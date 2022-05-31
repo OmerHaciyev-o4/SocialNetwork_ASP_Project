@@ -9,7 +9,7 @@ namespace SocialNetwork.Business.Abstract
 {
     public interface INotificationService
     {
-        List<Notification> GetList(int id);
+        List<Notification> GetList();
         void Add(Notification notification);
         void Update(Notification notification);
         void Remove(int id);

@@ -27,7 +27,7 @@ namespace SocialNetwork.Business.Concrete
 
         //public Notification GetById(int id) => _notificationDal.GetList().FirstOrDefault(not => not.Id == id);
 
-        public List<Notification> GetList(int id) => _notificationDal.GetList().Where(not => not.ReceiveUserId == id).ToList();
+        public List<Notification> GetList() => _notificationDal.GetList();
 
         public void Remove(int id)
         {

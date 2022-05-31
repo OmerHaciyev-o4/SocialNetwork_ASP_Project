@@ -379,8 +379,6 @@ function calcuteDate(sendDate, today) {
 
 function GetNotification() {
     setInterval(function () {
-        var currentNotificationLength = document.getElementById("friendRequestNotPanel").children.length;
-
         $.ajax({
             url: "/Database/GetFriends",
             method: "GET",
@@ -421,12 +419,14 @@ function GetNotification() {
             },
             error: function (err) { }
         });
+    }, 1000);
 
+    setInterval(function () {
         $.ajax({
             url: "/Database/GetNotification",
             method: "GET",
             success: function (notifications) {
-                console.log(notifications);
+                var currentNotificationLength = document.getElementById("friendRequestNotPanel").children.length;
                 var notCount = notifications.length;
 
                 if (notCount == 0) {
@@ -444,66 +444,58 @@ function GetNotification() {
 
                 if (notifications.length > 0 && currentNotificationLength != notifications.length) {
                     $.ajax({
-                        url: "/Database/GetUsers",
+                        url: "/Database/GetCurrentUser",
                         method: "GET",
-                        success: function (users) {
+                        success: function (user) {
                             var content = '';
-
                             var notLength = notifications.length;
                             if (notifications.length > 4) {
                                 notLength = 3;
                             }
+                            for (var i = 0; i < notifications.length; i++) {
+                                if (notifications[i].receiveUserId == user.id && notifications[i].title == "Friend Request") {
+                                    var imgPath = "";
+                                    if (user.imageUrl == null) {
+                                        imgPath = `/images/defaultImage.png`;
+                                    } else {
+                                        imgPath = user.imageUrl;
+                                    }
 
-                            for (var i = 0; i < notLength; i++) {
-                                if (notifications[i].title == "Friend Request") {
-                                    for (var j = 0; j < users.length; j++) {
-                                        if (users[j].id == notifications[i].senderUserId) {
+                                    var sendTimestr = calcuteDate(new Date(notifications[i].sendDate.toString()), new Date());
 
-                                            var imgPath = "";
-                                            if (users[j].imageUrl == null) {
-                                                imgPath = `/images/defaultImage.png`;
-                                            } else {
-                                                imgPath = users[j].imageUrl;
-                                            }
-
-                                            var sendTimestr = calcuteDate(new Date(notifications[i].sendDate.toString()), new Date());
-
-                                            var request = `<div class="wrap">
+                                    var request = `<div class="wrap">
                                                               <div class="card-body d-flex pt-0 ps-4 pe-4 pb-0 bor-0">
                                                                   <figure class="avatar me-3">
-                                                                      <img src="${imgPath}" alt="${users[j].username}" class="shadow-sm rounded-circle w45"/>
+                                                                      <img src="${imgPath}" alt="${user.username}" class="shadow-sm rounded-circle w45"/>
                                                                   </figure>
-                                                                  <h4 class="fw-700 text-grey-900 font-xssss mt-1">@${users[j].username}
+                                                                  <h4 class="fw-700 text-grey-900 font-xssss mt-1">@${user.username}
                                                                       <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${sendTimestr} before</span>
                                                                   </h4>
                                                               </div>
                                                               <div class="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                                                  <a onclick="ConfirmNotification(${users[j].id}, ${notifications[i].receiveUserId}, ${notifications[i].id})" class="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Confirm</a>
+                                                                  <a onclick="ConfirmNotification(${user.id}, ${notifications[i].receiveUserId}, ${notifications[i].id})" class="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Confirm</a>
                                                                   <a onclick="CancelNotification(${notifications[i].id}) class="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Delete</a>
                                                               </div>
                                                             </div>`;
-                                            content += request;
-                                            break;
-                                        }
-                                    }
+                                    content += request;
                                 }
                             }
-
                             document.getElementById("friendRequestNotPanel").innerHTML = content;
                         },
                         error: function (err) { }
                     });
                 }
             },
-            error: function (err) {
-                console.log(err);
-            }
+            error: function (err) { console.log(err); }
         });
+    }, 1000);
 
+    setInterval(function () {
         $.ajax({
             url: "/Database/GetPosts",
             method: "GET",
             success: function (usersPosts) {
+                console.log(usersPosts);
                 var postCount = 0;
                 for (var i = 0; i < usersPosts.length; i++) {
                     postCount += usersPosts[i].posts.length;
@@ -512,14 +504,12 @@ function GetNotification() {
 
 
                 if (postCount != currentPostsCount) {
-                    console.log(currentPostsCount);
-                    console.log(postCount);
                     ImplementPosts(usersPosts, usersPosts.length);
                 }
             },
-            error: function(error) {}
+            error: function (error) { }
         });
-    }, 500);
+    }, 1000);
 }
 
 GetNotification();

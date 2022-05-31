@@ -117,6 +117,7 @@ namespace SocialNetwork.WebUI
             app.Use(async (context, next) =>
             {
                 HomeController.Context = context;
+                DatabaseController.Context = context;
 
                 await next();
             });

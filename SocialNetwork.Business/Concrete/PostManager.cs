@@ -23,7 +23,7 @@ namespace SocialNetwork.Business.Concrete
         public List<Post> GetAll(int id = -1)
         {
             if (id != -1)
-                return _postDal.GetList().Where(p => p.IdUser == id).ToList();
+                return _postDal.GetList().OrderByDescending(p=>p.DatePost).Where(p => p.IdUser == id).ToList();
             else
                 return _postDal.GetList();
         }
