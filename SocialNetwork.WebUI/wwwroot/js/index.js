@@ -40,9 +40,8 @@ function UnSelectData(id) {
 $("#imgupload").change(function (e) {
     selectedDatas = e.target.files;
     var content = "";
-    for (var i = selectedDatas.length - 1; i >= 0 ; i--) {
+    for (var i = selectedDatas.length - 1; i >= 0; i--) {
         var data = selectedDatas[i];
-        console.log(data);
         if (data != null) {
             var id = RandomId();
             var item = `<div class="card w-100 shadow-xss rounded-xxxl p-1 mt-2 flex-row flex-wrap" id="${id}" name="${data.name}">
@@ -68,7 +67,7 @@ $("#imgupload").change(function (e) {
     }
 });
 
-function getData(formData) { 
+function getData(formData) {
     return axios({
         url: CLOUDINARY_URL,
         method: "POST",
@@ -108,7 +107,7 @@ async function SharePost() {
             type: 'POST',
             dataType: "json",
             data: postObj,
-            success : function(response) {
+            success: function (response) {
                 console.log("Yes");
             },
             error: function (err) {
@@ -179,140 +178,140 @@ function AddRating(postId, status) {
 
 function ImplementPosts(usersPosts, postCount) {
     var content = "";
-    for (var i = usersPosts.length - 1; i >= 0 ; i--) {
-        var userVM = usersPosts[i];
-        var imgPath = userVM.user.imageUrl;
-        if (userVM.user.imageUrl == null) { imgPath = "/images/defaultImage.png"; }
+    for (var i = 0; i < usersPosts.length; i++) {
+        var userPost = usersPosts[i];
 
-        for (var j = 0; j < userVM.posts.length; j++) {
-            var postVM = userVM.posts[j];
-            var timeDifference = calcuteDate(new Date(postVM.post.datePost.toString()), new Date());
+        var imgPath = userPost.user.imageUrl;
+        if (userPost.user.imageUrl == null) { imgPath = "/images/defaultImage.png"; }
 
-            var postViewCode =
-                `<div class="card w-100 shadow-xss rounded-xxl border-0 p-4 pb-0 mb-3">
-                    <div class="card-body p-0 d-flex">
-                        <figure class="avatar me-3">
-                            <img src="${imgPath}" alt="${userVM.user.username}" class="shadow-sm rounded-circle w45" />
-                        </figure>
-                        <a href="/Home/Profile?id=${userVM.user.id}" class="text-dark fw-bold open-font mt-1 text-decoration-none">${userVM.user.username}
-                            <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${timeDifference} ago</span>
-                        </a>
-                        <div class="ms-auto pointer">
-                            <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
-                        </div>
+        var post = userPost.post;
+        var timeDifference = calculatorDate(new Date(post.datePost.toString()), new Date());
+
+        var postViewCode =
+            `<div class="card w-100 shadow-xss rounded-xxl border-0 p-4 pb-0 mb-3">
+                <div class="card-body p-0 d-flex">
+                    <figure class="avatar me-3">
+                        <img src="${imgPath}" alt="${userPost.user.username}" class="shadow-sm rounded-circle w45" />
+                    </figure>
+                    <a href="/Home/Profile?id=${userPost.user.id}" class="text-dark fw-bold open-font mt-1 text-decoration-none">${userPost.user.username}
+                        <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${timeDifference} ago</span>
+                    </a>
+                    <div class="ms-auto pointer">
+                        <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
                     </div>
-                    <div class="card-body p-0 me-lg-5">
-                        <p class="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">${postVM.post.message}</p>
-                    </div>
-                    <div class="card-body d-block p-0 mb-3">
-                        <div class="row ps-2 pe-2">`;
+                </div>
+                <div class="card-body p-0 me-lg-5">
+                    <p class="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">${post.message}</p>
+                </div>
+                <div class="card-body d-block p-0 mb-3">
+                    <div class="row ps-2 pe-2">`;
 
-            if (postVM.postImages.length == 1) {
-                if (postVM.postImages[0].postImageType == "image") {
-                    postViewCode += `
-                        <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[0].postId})">
-                            <img src="${postVM.postImages[0].postImageURL}" class="rounded-3 w-100"/>
+        if (userPost.postImages.length == 1) {
+            if (userPost.postImages[0].postImageType == "image") {
+                postViewCode += `
+                        <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${userPost.postImages[0].postId})">
+                            <img src="${userPost.postImages[0].postImageURL}" class="rounded-3 w-100"/>
                         </div>
                     </div>`;
-                }
-                else if (postVM.postImages[0].postImageType == "video") {
-                    postViewCode += `
-                        <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[0].postId})">
+            }
+            else if (userPost.postImages[0].postImageType == "video") {
+                postViewCode += `
+                        <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${userPost.postImages[0].postId})">
                             <video  class="vjs-tech rounded-xxxl" style="width: 100%; height: auto;" controls>
-                                <source src="${postVM.postImages[0].postImageURL}">
+                                <source src="${userPost.postImages[0].postImageURL}">
                             </video>
                         </div>
                     </div>`;
-                }
             }
-            else if (postVM.postImages.length == 2) {
-                for (var k = 0; k < postVM.postImages.length; k++) {
-                    if (postVM.postImages[k].postImageType == "image") {
-                        postViewCode += `
-                                    <div class="col-xs-6 col-sm-6 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
-                                        <img src="${postVM.postImages[k].postImageURL}" class="rounded-3 w-100"/>
+        }
+        else if (userPost.postImages.length == 2) {
+            for (var k = 0; k < userPost.postImages.length; k++) {
+                if (userPost.postImages[k].postImageType == "image") {
+                    postViewCode += `
+                                    <div class="col-xs-6 col-sm-6 p-1" onclick="openImageSlide(${userPost.postImages[k].postId})">
+                                        <img src="${userPost.postImages[k].postImageURL}" class="rounded-3 w-100"/>
                                     </div>`;
-                    }
-                    else if(postVM.postImages[k].postImageType == "video") {
-                        postViewCode += `
-                            <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
+                }
+                else if (userPost.postImages[k].postImageType == "video") {
+                    postViewCode += `
+                            <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${userPost.postImages[k].postId})">
                                 <video  class="vjs-tech" style="width: 100%; height: auto;" controls>
-                                    <source src="${postVM.postImages[k].postImageURL}">
+                                    <source src="${userPost.postImages[k].postImageURL}">
                                 </video>
                             </div>`;
-                    }
                 }
-                postViewCode += `</div>`;
             }
-            else if (postVM.postImages.length >= 3) {
-                for (var k = 0; k < 2; k++) {
-                    if (postVM.postImages[k].postImageType == "image") {
-                        postViewCode += `
-                                    <div class="col-xs-6 col-sm-6 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
-                                        <img src="${postVM.postImages[k].postImageURL}" class="rounded-3 w-100"/>
+            postViewCode += `</div>`;
+        }
+        else if (userPost.postImages.length >= 3) {
+            for (var k = 0; k < 2; k++) {
+                if (userPost.postImages[k].postImageType == "image") {
+                    postViewCode += `
+                                    <div class="col-xs-6 col-sm-6 p-1" onclick="openImageSlide(${userPost.postImages[k].postId})">
+                                        <img src="${userPost.postImages[k].postImageURL}" class="rounded-3 w-100"/>
                                     </div>`;
-                    }
-                    else if (postVM.postImages[k].postImageType == "video") {
-                        postViewCode += `
-                            <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${postVM.postImages[k].postId})">
+                }
+                else if (userPost.postImages[k].postImageType == "video") {
+                    postViewCode += `
+                            <div class="col-xs-12 col-sm-12 p-1" onclick="openImageSlide(${userPost.postImages[k].postId})">
                                 <video  class="vjs-tech" style="width: 100%; height: auto;" controls>
-                                    <source src="${postVM.postImages[k].postImageURL}">
+                                    <source src="${userPost.postImages[k].postImageURL}">
                                 </video>
                             </div>`;
-                    }
                 }
+            }
 
-                if (postVM.postImages[2].postImageType == "image") {
-                    postViewCode += `<div class="col-xs-4 col-sm-4 p-1">
+            if (userPost.postImages[2].postImageType == "image") {
+                postViewCode += `<div class="col-xs-4 col-sm-4 p-1">
                                         <a class="position-relative d-block" href="#ClodinaryHref" data-lightbox="roadtrip">
-                                            <img src="${postVM.postImages[2]}" class="rounded-3 w-100" alt="post" />
+                                            <img src="${userPost.postImages[2]}" class="rounded-3 w-100" alt="post" />
                                             <span class="img-count font-sm text-white ls-3 fw-600">
-                                                <b>+${Number(postVM.postImage.length - 2)}</b>
+                                                <b>+${Number(userPost.postImage.length - 2)}</b>
                                             </span>
                                         </a>
                                     </div>
                                 </div>`;
-                }
-                else if (postVM.postImages[2].postImageType == "video") {
-                    postViewCode += `<div class="col-xs-12 col-sm-12 p-1">
+            }
+            else if (userPost.postImages[2].postImageType == "video") {
+                postViewCode += `<div class="col-xs-12 col-sm-12 p-1">
                                         <a class="position-relative d-block" href="#ClodinaryHref" data-lightbox="roadtrip">
                                             <video  class="vjs-tech" style="width: 100%; height: auto;">
-                                                <source src="${postVM.postImages[2].postImageURL}">
+                                                <source src="${userPost.postImages[2].postImageURL}">
                                             </video>
                                             <span class="img-count font-sm text-white ls-3 fw-600">
-                                                <b>+${Number(postVM.postImages.length - 2)}</b>
+                                                <b>+${Number(userPost.postImages.length - 2)}</b>
                                             </span>
                                         </a>
                                     </div>
                                 </div>`;
-                }
-                //postViewCode += `
-                //    <div class="col-xs-4 col-sm-4 p-1">
-                //        <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
-                //    </div>
-                //    <div class="col-xs-4 col-sm-4 p-1">
-                //        <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
-                //    </div>
-                //    <div class="col-xs-4 col-sm-4 p-1">
-                //        <a class="position-relative d-block" href="#ClodinaryHref" data-lightbox="roadtrip">
-                //            <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
-                //            <span class="img-count font-sm text-white ls-3 fw-600">
-                //                <b>+${Number(postVM.postImage.length - 2)}</b>
-                //            </span>
-                //        </a>
-                //    </div>
-                //</div>`;
             }
+            //postViewCode += `
+            //    <div class="col-xs-4 col-sm-4 p-1">
+            //        <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
+            //    </div>
+            //    <div class="col-xs-4 col-sm-4 p-1">
+            //        <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
+            //    </div>
+            //    <div class="col-xs-4 col-sm-4 p-1">
+            //        <a class="position-relative d-block" href="#ClodinaryHref" data-lightbox="roadtrip">
+            //            <img src="assets/images/t-10.jpg" class="rounded-3 w-100" alt="post" />
+            //            <span class="img-count font-sm text-white ls-3 fw-600">
+            //                <b>+${Number(postVM.postImage.length - 2)}</b>
+            //            </span>
+            //        </a>
+            //    </div>
+            //</div>`;
+        }
 
-            var rating = postVM.post.rating.toString();
-            if (postVM.post.rating >= 1000) {
-                rating = kFormatter(postVM.post.rating);
-            }
+        var rating = post.rating.toString();
+        if (post.rating >= 1000) {
+            rating = kFormatter(post.rating);
+        }
 
-            postViewCode += `
+        postViewCode += `
                 <div class="card-body d-flex p-0">
                     <div class="emoji-bttn pointer d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2">
-                        <i id="${postVM.post.id}LikeBtn" class="feather-heart text-white bg-red-gradiant me-2 btn-round-xs font-xss" onclick="AddRating('${postVM.post.id}', 'add')"></i>${rating} Like
+                        <i id="${post.id}LikeBtn" class="feather-heart text-white bg-red-gradiant me-2 btn-round-xs font-xss" onclick="AddRating('${post.id}', 'add')"></i>${rating} Like
                     </div>
                     <a class="d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss text-decoration-none">
                         <i class="feather-message-circle text-dark text-grey-900 btn-round-sm font-lg"></i>
@@ -326,27 +325,37 @@ function ImplementPosts(usersPosts, postCount) {
             </div>
         </div>`;
 
-            content += postViewCode;
-        }
+        content += postViewCode;
     }
 
     document.getElementById("posts").innerHTML = content;
 }
 
-function ConfirmNotification(senderId, myId, notId) {
+function ConfirmNotification(senderId, notId) {
     $.ajax({
-        type: 'GET',
-        url: `/Database/AddFriend?senderId=${senderId}&myId=${myId}&notId=${notId}`
+        url: "/Database/GetCurrentUser",
+        method: "GET",
+        success: function (user) {
+            $.ajax({
+                type: 'POST',
+                url: `/Database/Follow?senderId=${senderId}&myId=${user.id}&notId=${notId}`,
+                success: function (success) { },
+                error: function (err) { }
+            });
+        },
+        error: function (err) { }
     });
 }
 function CancelNotification(notId) {
     $.ajax({
         type: 'POST',
-        url: `/Database/RemoveNotification?notId=${notId}`
+        url: `/Database/RemoveNotification?notId=${notId}`,
+        success: function () { },
+        error: function () { }
     });
 }
 
-function calcuteDate(sendDate, today) {
+function calculatorDate(sendDate, today) {
     var year = today.getYear() - sendDate.getYear();
     if (year <= 0) {
         var month = today.getMonth() - sendDate.getMonth();
@@ -377,45 +386,51 @@ function calcuteDate(sendDate, today) {
     return `${sendDate.getDay()}/${sendDate.getMonth()}/${sendDate.getYear()}`;
 }
 
-function GetNotification() {
+function Intervals() {
+
     setInterval(function () {
         $.ajax({
             url: "/Database/GetFriends",
             method: "GET",
             success: function (users) {
-                var confirmFriendPanelCount = document.getElementById("confirmFriendPanel").children.length;
-                if (confirmFriendPanelCount != users.length) {
-                    var usersLength = users.length;
-                    if (users.length > 4) { usersLength = 3; }
+                var usersLength = users.length;
+                if (users.length > 4) { usersLength = 3; }
 
-                    var content = "";
+                var content = "";
 
-                    for (var i = 0; i < usersLength; i++) {
-                        var imgPath = "";
-                        if (users[i].imageUrl == null) { imgPath = `/images/defaultImage.png`; }
-                        else { imgPath = users[i].imageUrl; }
+                for (var i = 0; i < usersLength; i++) {
+                    var user = users[i];
 
-                        let user = `
-                        <div class="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3 mb-3" id="${
-                            users[i].id}">
+                    var imgPath = user.imageUrl;
+                    if (user.imageUrl == null) { imgPath = `/images/defaultImage.png`; }
+
+                    var lastActiveTime = "";
+                    var lastActiveDate = new Date(user.lastActiveDate.toString());
+                    var now = new Date();
+                    if (lastActiveDate.getDay() == now.getDay() &&
+                        lastActiveDate.getMonth() == now.getMonth() &&
+                        lastActiveDate.getYear() == now.getYear()) {
+                        lastActiveTime = `${lastActiveDate.getSeconds()}:${lastActiveDate.getMinutes()}`;
+                    }
+                    else { lastActiveTime = `${lastActiveDate.getDay()}/${lastActiveDate.getMonth()}/${lastActiveDate.getYear()}  ${lastActiveDate.getSeconds()}:${lastActiveDate.getMinutes()}`; }
+
+                    let userHTML = ` 
+                        <div class="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3 mb-3" id="${user.id}">
                             <figure class="avatar me-2 mb-0">
-                                <img src="${imgPath}" alt="${users[i].username
-                            }" class="shadow-sm rounded-circle w45" />
+                                <img src="${imgPath}" alt="${user.username}" class="shadow-sm rounded-circle w45" />
                             </figure>
-                            <h4 class="fw-700 text-grey-900 font-xssss mt-2 text-decoration-none">@${users[i].username}
-                                <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">NaN</span>
+                            <h4 class="fw-700 text-grey-900 font-xssss mt-2 text-decoration-none">@${user.username}
+                                <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${lastActiveTime}</span>
                             </h4>
-                            <a href="/Home/Profile?id=${users[i].id
-                            }" class="btn-round-sm bg-white ms-auto mt-2 text-decoration-none">
+                            <a href="/Home/Profile?id=${user.id}" class="btn-round-sm bg-white ms-auto mt-2 text-decoration-none">
                                 <span class="feather-chevron-right font-xss text-grey-900"></span>
                             </a>
                         </div>`;
 
-                        content += user;
-                    }
-
-                    document.getElementById("confirmFriendPanel").innerHTML = content;
+                    content += userHTML;
                 }
+
+                document.getElementById("confirmFriendPanel").innerHTML = content;
             },
             error: function (err) { }
         });
@@ -426,65 +441,64 @@ function GetNotification() {
             url: "/Database/GetNotification",
             method: "GET",
             success: function (notifications) {
-                var currentNotificationLength = document.getElementById("friendRequestNotPanel").children.length;
-                var notCount = notifications.length;
+                $.ajax({
+                    url: "/Database/GetCurrentUser",
+                    method: "GET",
+                    success: function (user) {
+                        var currentUserNotifications = [];
 
-                if (notCount == 0) {
-                    document.getElementById("notBadge").innerHTML = "0";
-                    document.getElementById("firstNotDot").classList.add('d-none');
-                }
-                else if (notCount > 9) {
-                    document.getElementById("notBadge").innerHTML = "9+";
-                    document.getElementById("firstNotDot").classList.remove('d-none');
-                }
-                else {
-                    document.getElementById("notBadge").innerHTML = notCount.toString();
-                    document.getElementById("firstNotDot").classList.remove('d-none');
-                }
-
-                if (notifications.length > 0 && currentNotificationLength != notifications.length) {
-                    $.ajax({
-                        url: "/Database/GetCurrentUser",
-                        method: "GET",
-                        success: function (user) {
-                            var content = '';
-                            var notLength = notifications.length;
-                            if (notifications.length > 4) {
-                                notLength = 3;
+                        for (var i = 0; i < notifications.length; i++) {
+                            if (notifications[i].notification.receiveUserId == user.id && notifications[i].notification.title == "Friend Request") {
+                                currentUserNotifications.push(notifications[i]);
                             }
-                            for (var i = 0; i < notifications.length; i++) {
-                                if (notifications[i].receiveUserId == user.id && notifications[i].title == "Friend Request") {
-                                    var imgPath = "";
-                                    if (user.imageUrl == null) {
-                                        imgPath = `/images/defaultImage.png`;
-                                    } else {
-                                        imgPath = user.imageUrl;
-                                    }
+                        }
 
-                                    var sendTimestr = calcuteDate(new Date(notifications[i].sendDate.toString()), new Date());
+                        var notLength = currentUserNotifications.length;
+                        if (notLength > 4) { notLength = 3; }
+                        var content = '';
+                        for (var i = 0; i < notLength; i++) {
+                            var senderUser = currentUserNotifications[i].senderUser;
 
-                                    var request = `<div class="wrap">
-                                                              <div class="card-body d-flex pt-0 ps-4 pe-4 pb-0 bor-0">
-                                                                  <figure class="avatar me-3">
-                                                                      <img src="${imgPath}" alt="${user.username}" class="shadow-sm rounded-circle w45"/>
-                                                                  </figure>
-                                                                  <h4 class="fw-700 text-grey-900 font-xssss mt-1">@${user.username}
-                                                                      <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${sendTimestr} before</span>
-                                                                  </h4>
-                                                              </div>
-                                                              <div class="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                                                  <a onclick="ConfirmNotification(${user.id}, ${notifications[i].receiveUserId}, ${notifications[i].id})" class="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Confirm</a>
-                                                                  <a onclick="CancelNotification(${notifications[i].id}) class="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Delete</a>
-                                                              </div>
-                                                            </div>`;
-                                    content += request;
-                                }
-                            }
-                            document.getElementById("friendRequestNotPanel").innerHTML = content;
-                        },
-                        error: function (err) { }
-                    });
-                }
+                            var imgPath = senderUser.imageUrl;
+                            if (imgPath == null) { imgPath = `/images/defaultImage.png`; }
+
+                            var sendTimeStr = calculatorDate(new Date(notifications[i].notification.sendDate.toString()), new Date());
+
+                            var request = ` <div class="wrap">
+                                                <div class="card-body d-flex pt-0 ps-4 pe-4 pb-0 bor-0">
+                                                    <figure class="avatar me-3">
+                                                        <img src="${imgPath}" alt="${senderUser.username}" class="shadow-sm rounded-circle w45"/>
+                                                    </figure>
+                                                    <h4 class="fw-700 text-grey-900 font-xssss mt-1">@${senderUser.username}
+                                                        <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${sendTimeStr} before</span>
+                                                    </h4>
+                                                </div>
+                                                <div class="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
+                                                    <a onclick="ConfirmNotification(${senderUser.id}, ${notifications[i].notification.id})" class="pointer p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Confirm</a>
+                                                    <a onclick="CancelNotification(${notifications[i].notification.id}) class="pointer p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl text-decoration-none">Delete</a>
+                                                </div>
+                                            </div>`;
+                            content += request;
+                        }
+                        document.getElementById("friendRequestNotPanel").innerHTML = content;
+
+
+                        var notCount = currentUserNotifications.length;
+                        if (notCount == 0) {
+                            document.getElementById("notBadge").innerHTML = "0";
+                            document.getElementById("firstNotDot").classList.add('d-none');
+                        }
+                        else if (notCount > 9) {
+                            document.getElementById("notBadge").innerHTML = "9+";
+                            document.getElementById("firstNotDot").classList.remove('d-none');
+                        }
+                        else {
+                            document.getElementById("notBadge").innerHTML = notCount.toString();
+                            document.getElementById("firstNotDot").classList.remove('d-none');
+                        }
+                    },
+                    error: function (err) { }
+                });
             },
             error: function (err) { console.log(err); }
         });
@@ -495,16 +509,11 @@ function GetNotification() {
             url: "/Database/GetPosts",
             method: "GET",
             success: function (usersPosts) {
-                console.log(usersPosts);
-                var postCount = 0;
-                for (var i = 0; i < usersPosts.length; i++) {
-                    postCount += usersPosts[i].posts.length;
-                }
+                var postCount = usersPosts.length;
                 var currentPostsCount = document.getElementById("posts").children.length;
 
-
                 if (postCount != currentPostsCount) {
-                    ImplementPosts(usersPosts, usersPosts.length);
+                    ImplementPosts(usersPosts, postCount);
                 }
             },
             error: function (error) { }
@@ -512,4 +521,4 @@ function GetNotification() {
     }, 1000);
 }
 
-GetNotification();
+Intervals();

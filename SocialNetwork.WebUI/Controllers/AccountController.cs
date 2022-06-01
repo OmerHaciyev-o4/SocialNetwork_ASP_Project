@@ -46,6 +46,9 @@ namespace SocialNetwork.WebUI.Controllers
         {
             try
             {
+                HomeController.User.LastActiveDate = DateTime.Now;
+                _userService.Update(HomeController.User);
+
                 _signInManager.SignOutAsync().Wait();
                 HomeController.User = null;
             }
@@ -168,7 +171,9 @@ namespace SocialNetwork.WebUI.Controllers
                             Lastname = "",
                             Username = model.Username,
                             Password = model.Password,
-                            Email = model.Email
+                            Email = model.Email,
+                            LastActiveDate = DateTime.Now,
+                            IsDarkMode = false
                         };
 
                         try { _userService.Add(user); }

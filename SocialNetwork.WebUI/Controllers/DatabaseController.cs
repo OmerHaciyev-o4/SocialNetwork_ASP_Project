@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,9 @@ using Newtonsoft.Json;
 using SocialNetwork.Business.Abstract;
 using SocialNetwork.Social.Entities.Concrete;
 using SocialNetwork.WebUI.Entities;
+using SocialNetwork.WebUI.Helpers;
 using SocialNetwork.WebUI.Models;
+using System.Security.Claims;
 
 namespace SocialNetwork.WebUI.Controllers
 {
@@ -43,22 +46,24 @@ namespace SocialNetwork.WebUI.Controllers
         [HttpGet]
         public IActionResult GetNotification()
         {
+            //notifications.Sort((x, y) => DateTime.Compare(x.SendDate, y.SendDate));
+
             var notifications = _notificationService.GetList();
-            notifications.Sort((x, y) => DateTime.Compare(x.SendDate, y.SendDate));
+            notifications = notifications.OrderByDescending(n => n.SendDate).ToList();
+
             List<NotificationViewModel> notificationViewModels = new List<NotificationViewModel>();
+
             foreach (var notification in notifications)
             {
                 var senderUser = _userService.GetById(notification.SenderUserId);
-                var receiveUser = _userService.GetById(notification.ReceiveUserId);
                 notificationViewModels.Add(new NotificationViewModel()
                 {
                     SenderUser = senderUser,
-                    ReceiverUser = receiveUser,
                     Notification = notification
                 });
             }
 
-            return Ok(notifications);
+            return Ok(notificationViewModels);
         }
 
         [HttpGet]
@@ -81,62 +86,224 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetFriends()
+        public async Task<IActionResult> GetFriends()
         {
-            return Ok(getFriends());
+            var identityUser = await _userManager.GetUserAsync(HttpContext.User);
+            var user = _userService.GetByUsername(identityUser.UserName);
+
+            var friends = _friendService.GetAll();
+            var friendUsers = new List<User>();
+
+            foreach (var friend in friends)
+            {
+                if (friend.UserId == user.Id)
+                    friendUsers.Add(_userService.GetById(friend.FriendId));
+            }
+            return Ok(friendUsers);
         }
 
         [HttpGet]
-        public IActionResult GetPosts()
+        public async Task<IActionResult> GetPosts()
         {
-            List<User> friends = getFriends();
+            var identityUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = _userService.GetByUsername(identityUser.UserName);
+            var posts = _postService.GetAll();
+            var friends = _friendService.GetAll();
 
-            List<UserPostViewModel> posts = new List<UserPostViewModel>();
-            for (int i = 0; i < friends.Count; i++)
+            var friendsForUsers = new List<User>();
+            foreach (var friend in friends)
             {
-                var friendPosts = _postService.GetAll(friends[i].Id);
-                //friendPosts = friendPosts.OrderByDescending(p => p.DatePost).ToList();
-                if (friendPosts.Count > 0)
+                if (friend.UserId == currentUser.Id)
                 {
-                    var friendPostsVM = new UserPostViewModel() { User = friends[i] };
-                    for (int j = 0; j < friendPosts.Count; j++)
+                    friendsForUsers.Add(_userService.GetById(friend.FriendId));
+                }
+            }
+
+            var friendsForPost = new List<PostDetailsViewModel>();
+            foreach (var post in posts)
+            {
+                foreach (var friendsForUser in friendsForUsers)
+                {
+                    if (post.IdUser == friendsForUser.Id)
                     {
-                        var id = friendPosts[j].Id;
-                        var postImages = _postImageService.GetAll(id);
-                        friendPostsVM.Posts.Add(new PostDetailsViewModel()
+                        var imagesForPost = _postImageService.GetAll(post.Id);
+
+                        friendsForPost.Add(new PostDetailsViewModel()
                         {
-                            Post = friendPosts[j],
-                            PostImages = postImages
+                            User = friendsForUser,
+                            Post = post,
+                            PostImages = imagesForPost
                         });
+                        break;
                     }
-                    posts.Add(friendPostsVM);
-                }
-                
-            }
-
-            var myPosts = _postService.GetAll(HomeController.User.Id);
-            if (myPosts.Count > 0)
-            {
-                var myPostsVM = new UserPostViewModel() { User = HomeController.User };
-                for (int i = 0; i < myPosts.Count; i++)
-                {
-                    var id = myPosts[i].Id;
-                    var postImages = _postImageService.GetAll(id);
-                    myPostsVM.Posts.Add(new PostDetailsViewModel()
+                    else if (post.IdUser == currentUser.Id)
                     {
-                        Post = myPosts[i],
-                        PostImages = postImages
-                    });
-                }
+                        var imagesForPost = _postImageService.GetAll(post.Id);
 
-                posts.Add(myPostsVM);
+                        friendsForPost.Add(new PostDetailsViewModel()
+                        {
+                            User = currentUser,
+                            Post = post,
+                            PostImages = imagesForPost
+                        });
+                        break;
+                    }
+                }
             }
 
-            //foreach (var item in posts)
+            friendsForPost = friendsForPost.OrderByDescending(pd => pd.Post.DatePost).ToList();
+
+            return Ok(friendsForPost);
+
+
+
+
+
+            //List<User> friends = getFriends();
+
+            //List<UserPostViewModel> posts = new List<UserPostViewModel>();
+            //for (int i = 0; i < friends.Count; i++)
             //{
-            //    item.Posts = item.Posts.OrderByDescending(x => x.Post.DatePost).ToList();
+            //    var friendPosts = _postService.GetAll(friends[i].Id);
+            //    //friendPosts = friendPosts.OrderByDescending(p => p.DatePost).ToList();
+            //    if (friendPosts.Count > 0)
+            //    {
+            //        var friendPostsVM = new UserPostViewModel() { User = friends[i] };
+            //        for (int j = 0; j < friendPosts.Count; j++)
+            //        {
+            //            var id = friendPosts[j].Id;
+            //            var postImages = _postImageService.GetAll(id);
+            //            friendPostsVM.Posts.Add(new PostDetailsViewModel()
+            //            {
+            //                Post = friendPosts[j],
+            //                PostImages = postImages
+            //            });
+            //        }
+            //        posts.Add(friendPostsVM);
+            //    }
+                
             //}
-            return Ok(posts);
+
+            //var myPosts = _postService.GetAll(HomeController.User.Id);
+            //if (myPosts.Count > 0)
+            //{
+            //    var myPostsVM = new UserPostViewModel() { User = HomeController.User };
+            //    for (int i = 0; i < myPosts.Count; i++)
+            //    {
+            //        var id = myPosts[i].Id;
+            //        var postImages = _postImageService.GetAll(id);
+            //        myPostsVM.Posts.Add(new PostDetailsViewModel()
+            //        {
+            //            Post = myPosts[i],
+            //            PostImages = postImages
+            //        });
+            //    }
+
+            //    posts.Add(myPostsVM);
+            //}
+
+            ////foreach (var item in posts)
+            ////{
+            ////    item.Posts = item.Posts.OrderByDescending(x => x.Post.DatePost).ToList();
+            ////}
+            //return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetActiveUsers()
+        {
+            var identityUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = _userService.GetByUsername(identityUser.UserName);
+            var activeUsers = UserHelper.ActiveUsers;
+            var activeUsersForAPI = new List<ActiveUserViewModel>();
+
+            var friends = _friendService.GetAll();
+            var friendsUsers = new List<User>();
+            foreach (var friend in friends)
+            {
+                if (friend.UserId == currentUser.Id)
+                    friendsUsers.Add(_userService.GetById(friend.FriendId));
+            }
+
+            foreach (var friend in friendsUsers)
+            {
+                var activeUserForAPI = new ActiveUserViewModel() { User = friend };
+                foreach (var activeUser in activeUsers)
+                {
+                    if (friend.Id == activeUser.Id)
+                    {
+                        activeUserForAPI.IsActive = true;
+                        break;
+                    }
+                    else
+                    {
+                        activeUserForAPI.IsActive = false;
+                    }
+                }
+                activeUsersForAPI.Add(activeUserForAPI);
+            }
+
+            activeUsersForAPI = activeUsersForAPI.OrderByDescending(au => au.IsActive).ToList();
+            return Ok(activeUsersForAPI);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMessageClouds(int id)
+        {
+            var identityUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = _userService.GetByUsername(identityUser.UserName);
+            var friendUser = _userService.GetById(id);
+
+            //var identityUser = await _userManager.GetUserAsync(HttpContext.User);
+            //var currentUser = _userService.GetByUsername(identityUser.UserName);
+            //var friendUser = _userService.GetById(id);
+
+            //var clouds = _messageService.GetList();
+            //var roomCloudVM = new MessageCloudViewModel()
+            //{
+            //    MyUser = currentUser,
+            //    FriendUser = friendUser
+            //};
+
+            //foreach (var cloud in clouds)
+            //{
+            //    if (cloud.MyId == currentUser.Id &&
+            //        cloud.FriendId == friendUser.Id)
+            //    {
+            //        roomCloudVM.Clouds.Add(cloud);
+            //    }
+            //    else if (cloud.MyId == friendUser.Id &&
+            //             cloud.FriendId == currentUser.Id)
+            //    {
+            //        if (!cloud.Seen)
+            //        {
+            //            cloud.Seen = true;
+            //            cloud.SendDate = DateTime.Now;
+            //            _messageService.Update(cloud);
+            //        }
+            //        roomCloudVM.Clouds.Add(cloud);
+            //    }
+            //}
+            //roomCloudVM.Clouds = roomCloudVM.Clouds.OrderByDescending(c => c.SendDate).ToList();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserAppMode()
+        {
+            var identityUser = await _userManager.GetUserAsync(HttpContext.User);
+            var customUser = _userService.GetByUsername(identityUser.UserName);
+
+            if (customUser.IsDarkMode)
+                customUser.IsDarkMode = false;
+            else if (!customUser.IsDarkMode)
+                customUser.IsDarkMode = true;
+
+            HomeController.User = customUser;
+            _userService.Update(customUser);
+
+            return Ok(customUser.IsDarkMode);
         }
 
 
@@ -145,12 +312,29 @@ namespace SocialNetwork.WebUI.Controllers
         {
             Thread.Sleep(1000);
 
-            var notification = JsonConvert.DeserializeObject<Notification>(notificationInJson);
-            notification.SenderUserId = HomeController.User.Id;
-            notification.SendDate = DateTime.Now;
-            _notificationService.Add(notification);
+            var postedNotification = JsonConvert.DeserializeObject<Notification>(notificationInJson);
+            postedNotification.SendDate = DateTime.Now;
 
-            return Redirect("/Home/Index");
+            var notifications = _notificationService.GetList();
+            var verificationAnswer = false;
+            foreach (var notification in notifications)
+            {
+                if (notification.SenderUserId == postedNotification.SenderUserId && 
+                    notification.ReceiveUserId == postedNotification.ReceiveUserId && 
+                    notification.Title == "Friend Request")
+                {
+                    verificationAnswer = true;
+                    break;
+                }
+            }
+
+            if (!verificationAnswer)
+            {
+                _notificationService.Add(postedNotification);
+                return Ok();
+            }
+            else
+                return BadRequest();
         }
 
         [HttpPost]
@@ -183,7 +367,17 @@ namespace SocialNetwork.WebUI.Controllers
 
             _postService.Add(post);
             Thread.Sleep(800);
-            var posts = _postService.GetAll(HomeController.User.Id);
+            var posts = _postService.GetAll();
+            var tempPosts = new List<Post>();
+            foreach (var post1 in posts)
+            {
+                if (post1.IdUser == HomeController.User.Id)
+                {
+                    tempPosts.Add(post1);
+                }
+            }
+
+            posts = tempPosts.ToArray().ToList();
             posts.Sort((x, y) => DateTime.Compare(x.DatePost, y.DatePost));
 
             for (int i = 0; i < model.DataList.Count; i++)
@@ -215,8 +409,8 @@ namespace SocialNetwork.WebUI.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public IActionResult AddFriend(int senderId, int myId, int notId)
+        [HttpPost]
+        public IActionResult Follow(int senderId, int myId, int notId)
         {
             var meToFriend = new Friend()
             {
@@ -237,20 +431,52 @@ namespace SocialNetwork.WebUI.Controllers
             return Ok();
         }
 
-
-        private List<User> getFriends()
+        [HttpPost]
+        public IActionResult UnFollow(int userId, int friendId)
         {
-            List<Friend> friends = _friendService.GetAll();
-            List<User> users = new List<User>();
-            for (int i = 0; i < friends.Count; i++)
+            var friends = _friendService.GetAll();
+            Friend meToFriend = null;
+            Friend friendToMe = null;
+            foreach (var friend in friends)
             {
-                if (friends[i].UserId == HomeController.User.Id)
+                if (friend.UserId == userId &&
+                    friend.FriendId == friendId)
                 {
-                    users.Add(_userService.GetById(friends[i].FriendId));
+                    meToFriend = friend;
+                }
+                else if (friend.UserId == friendId &&
+                         friend.FriendId == userId)
+                {
+                    friendToMe = friend;
                 }
             }
 
-            return users;
+            if (meToFriend != null && friendToMe != null)
+            {
+                _friendService.Remove(meToFriend);
+                _friendService.Remove(friendToMe);
+
+                //TODO: Room and RoomClouds delete
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        private List<User> getFriends()
+        {
+            var user = _userService.GetByUsername(HomeController.User.Username);
+
+            var friends = _friendService.GetAll();
+            var friendUsers = new List<User>();
+
+            foreach (var friend in friends)
+            {
+                if (friend.UserId == user.Id)
+                    friendUsers.Add(_userService.GetById(friend.FriendId));
+            }
+
+            return friendUsers;
         }
     }
 }

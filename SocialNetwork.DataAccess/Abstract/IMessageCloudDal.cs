@@ -8,7 +8,7 @@ using SocialNetwork.Social.Entities.Concrete;
 
 namespace SocialNetwork.DataAccess.Abstract
 {
-    public interface IRoomCloudDal : IEntityRepository<RoomCloud>
+    public interface IMessageCloudDal : IEntityRepository<MessageCloud>
     {
     }
 }

@@ -55,13 +55,22 @@ Create Table Rooms(
 	[MId] int not null foreign key references Users(Id),
 	[FId] int not null foreign key references Users(Id))
 
-Create Table RoomClouds(
+Create Table MessageClouds(
 	Id int primary key identity(1, 1) not null,
-	RoomId int not null foreign key references Rooms(Id),
 	MyId int not null foreign key references Users(Id),
 	FriendId int not null foreign key references Users(Id),
 	[Message] nvarchar(max) not null,
-	[SendDate] datetime2 default(sysdatetime()))
+	[SendDate] datetime2 default(sysdatetime()),
+	Seen bit null,
+	SeenDate datetime2)
+
+--Create Table RoomClouds(
+--	Id int primary key identity(1, 1) not null,
+--	RoomId int not null foreign key references Rooms(Id),
+--	MyId int not null foreign key references Users(Id),
+--	FriendId int not null foreign key references Users(Id),
+--	[Message] nvarchar(max) not null,
+--	[SendDate] datetime2 default(sysdatetime()))
 
 
 

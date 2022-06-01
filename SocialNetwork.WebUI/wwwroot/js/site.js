@@ -23,17 +23,72 @@
     }
 }
 
-function AddFollow(el, id) {
-    var notObj = {
-        "Title": "Friend Request",
-        "ReceiveUserId": Number(id)
-    }
+function Follow(el, id) {
+    el.innerHTML = "Sent";
+    el.style.backgroundColor = "#79db91";
 
     $.ajax({
-        url: `/Database/AddNotification?notificationInJson=${JSON.stringify(notObj)}`,
-        method: "POST",
-        success: function() {
-            el.onclick = function() {};
+        url: "/Database/GetCurrentUser",
+        method: "GET",
+        success: function(user) {
+            var notObj = {
+                "Title": "Friend Request",
+                "ReceiveUserId": Number(id),
+                "SenderUserId": Number(user.id)
+            }
+
+            $.ajax({
+                url: `/Database/AddNotification?notificationInJson=${JSON.stringify(notObj)}`,
+                method: "POST",
+                success: function () {
+                    var alert = document.getElementById("searchResultAlert");
+                    alert.classList.remove("d-none");
+                    alert.classList.remove("alert-danger");
+                    alert.classList.add("alert-success");
+                    alert.innerHTML = "Your request has been successfully sent.";
+                },
+                error: function (err) {
+                    var alert = document.getElementById("searchResultAlert");
+                    alert.classList.remove("d-none");
+                    alert.classList.remove("alert-success");
+                    alert.classList.add("alert-danger");
+                    alert.innerHTML = "You sent the request in advance.";
+                }
+            });
+        },
+        error: function(err) {}
+    });
+}
+
+function UnFollow(el, id) {
+    $.ajax({
+        url: "/Database/GetCurrentUser",
+        method: "GET",
+        success: function(user) {
+            $.ajax({
+                url: `/Database/UnFollow?userId=${user.id}&friendId=${id}`,
+                method: "POST",
+                success: function () {
+                    var alert = document.getElementById("searchResultAlert");
+                    alert.classList.remove("d-none");
+                    alert.classList.remove("alert-danger");
+                    alert.classList.add("alert-success");
+                    alert.innerHTML = "You're not friends anymore.";
+
+                    el.innerHTML = "FOLLOW";
+                    el.style.backgroundColor = "#28a745";
+                    el.onclick = function () {
+                        Follow(el, id);
+                    }
+                },
+                error: function (err) {
+                    var alert = document.getElementById("searchResultAlert");
+                    alert.classList.remove("d-none");
+                    alert.classList.remove("alert-success");
+                    alert.classList.add("alert-danger");
+                    alert.innerHTML = "We encountered an unexpected error. Try again.";
+                }
+            });
         }
     });
 }
@@ -163,4 +218,73 @@ document.getElementById('searchPanel').addEventListener('keydown', function (e) 
     }
 });
 
+document.getElementById('appMode').addEventListener('click', function (event) {
+    $.ajax({
+        url: "/Home/ChangeUserAppMode",
+        type: "POST",
+        success: function (res) {
+            var iconEl = document.getElementById('appModeIcon');
+            var body = document.getElementsByTagName('body')[0];
+            if (res == true) {
+                iconEl.remove("feather-moon");
+                iconEl.add("feather-sun");
+                body.classList.remove('theme-light');
+                body.classList.remove('theme-dark');
+            }
+            else {
+                iconEl.remove("feather-sun");
+                iconEl.add("feather-moon");
+                body.classList.remove('theme-dark');
+                body.classList.remove('theme-light');
+            }
+        },
+        error: function (err) { }
+    });
 
+    event.preventDefault();
+});
+
+function StartFunc() {
+    setInterval(function () {
+        $.ajax({
+            url: `/Database/GetActiveUsers`,
+            method: "GET",
+            success: function (users) {
+                var content = "";
+                var activeFriends = [];
+                for (var i = 0; i < users.length; i++) {
+                    var userVM = users[i];
+                            
+                    var imgPath = userVM.user.imageUrl;
+                    if (imgPath == null) { imgPath = `/images/defaultImage.png`; }
+
+                    var userContent =
+                        `<li class="bg-transparent list-group-item no-icon pe-0 ps-0 pt-2 pb-2 border-0 d-flex align-items-center">
+                                <figure class="avatar float-left mb-0 me-2">
+                                    <img src="${imgPath}" alt="${userVM.user.username}" class="w35">
+                                </figure>
+                                <a href="/Home/Chat?id=${userVM.user.id}" class="fw-700 mb-0 mt-0 text-decoration-none">
+                                    <span class="font-xssss text-grey-600 d-block text-dark model-popup-chat pointer">@${userVM.user.username}</span>
+                                </a>`;
+                    if (userVM.isActive) {
+                        userContent +=
+                            `<span class="bg-success ms-auto btn-round-xss"></span>
+                        </li>`;
+                    }
+                    else {
+                        userContent +=
+                            `<span class="bg-danger ms-auto btn-round-xss"></span>
+                        </li>`;
+                    }
+
+                    content += userContent;
+                }
+
+                document.getElementById("activeFriends").innerHTML = content;
+            },
+            error: function (err) { }
+        });
+    }, 500);
+}
+
+StartFunc();

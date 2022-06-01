@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -32,12 +33,13 @@ namespace SocialNetwork.WebUI.Controllers
         private SignInManager<CustomIdentityUser> _signInManager;
         private IUserService _userService;
         private IFriendService _friendService;
+        private IMessageService _messageService;
         private IMapper _mapper;
         private IWebHostEnvironment _webHost;
         private Cloudinary _cloudinary;
 
 
-        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost, IMapper mapper, IFriendService friendService)
+        public HomeController(UserManager<CustomIdentityUser> userManager, RoleManager<CustomIdentityRole> roleManager, SignInManager<CustomIdentityUser> signInManager, IUserService userService, IWebHostEnvironment webHost, IMapper mapper, IFriendService friendService, IMessageService messageService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -46,12 +48,12 @@ namespace SocialNetwork.WebUI.Controllers
             _webHost = webHost;
             _mapper = mapper;
             _friendService = friendService;
+            _messageService = messageService;
 
             var userId = _userManager.GetUserId(Context.User);
             var username = _userManager.Users.FirstOrDefault(u => u.Id == userId).UserName;
 
             User = _userService.GetByUsername(username);
-            User.IsDarkMode = true;
 
             var myAccount = new Account(apiKey: "392371254347452", apiSecret: "7qwJgIJnuMdrYhtOVgj4TxQ2yNQ", cloud: "social-network-web");
             _cloudinary = new Cloudinary(myAccount);
@@ -153,10 +155,9 @@ namespace SocialNetwork.WebUI.Controllers
         }
 
 
-        public IActionResult Chat(int id)
+        public async Task<IActionResult> Chat(int id)
         {
-
-            return View();
+            return View(id);
         }
         
 

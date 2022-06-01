@@ -9,7 +9,7 @@ namespace SocialNetwork.Business.Abstract
 {
     public interface IPostService
     {
-        List<Post> GetAll(int id = -1);
+        List<Post> GetAll();
         void Add(Post post);
         void Update(Post post);
         void Remove(Post post);

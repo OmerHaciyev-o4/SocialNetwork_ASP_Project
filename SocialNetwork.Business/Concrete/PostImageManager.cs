@@ -23,7 +23,20 @@ namespace SocialNetwork.Business.Concrete
         public List<PostImage> GetAll(int id = -1)
         {
             if (id != -1)
-                return _postImageDal.GetList().Where(pi => pi.PostId == id).ToList();
+            {
+                var postImages = _postImageDal.GetList();
+                var selectedPostImages = new List<PostImage>();
+                foreach (var postImage in postImages)
+                {
+                    if (postImage.PostId == id)
+                    {
+                        selectedPostImages.Add(postImage);
+                    }
+                }
+
+                return selectedPostImages;
+                //return _postImageDal.GetList().Where(pi => pi.PostId == id).ToList();
+            }
             else
                 return _postImageDal.GetList();
         }

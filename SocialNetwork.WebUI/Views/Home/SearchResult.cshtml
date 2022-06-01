@@ -1,20 +1,19 @@
 ﻿@using SocialNetwork.WebUI.Controllers
 @model SocialNetwork.WebUI.Models.SearchResultResultViewModel
-
 @{
     string resultCount = "";
 }
-
-
 <div class="middle-sidebar-bottom">
     <div class="middle-sidebar-left pe-0">
         <div class="row">
-            <div class="col-xl-12">
+            <div class="col-xl-12 h-100">
+                <div class="alert d-none" role="alert" id="searchResultAlert"></div>
+
                 <div class="card shadow-xss w-100 d-block d-flex border-0 p-4 mb-3">
                     <h2 class="fw-700 mb-0 mt-0 font-md text-grey-900 d-flex align-items-center">
                         @if (Model.Users != null)
                         {
-                            if (Model.Users.Count == 0) { resultCount = "0 No found"; }
+                            if (Model.Users.Count == 0) { resultCount = "0 No found";}
                             else if (Model.Users.Count > 0) { resultCount = Model.Users.Count + " User"; }
                         }
                         else { resultCount = "0 No found"; }
@@ -43,8 +42,8 @@
                                             </figure>
                                             <div class="clearfix w-100"></div>
                                             <h4 class="fw-700 font-xsss mt-3 mb-0">@string.Format("{0} {1}", user.FirstName, user.Lastname)</h4>
-                                            <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">@string.Format("@{0}", user.Username)</p>
-                                            <a href="/" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">Go to profile</a>
+                                            <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3 pointer"><a href="/Home/Profile?id=@user.Id" class="text-decoration-none text-grey-500">@string.Format("@{0}", user.Username)</a></p>
+                                            <a href="/Home/Profile?id=@user.Id" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">Go to profile</a>
                                         </div>
                                     </div>
                                 </div>
@@ -66,14 +65,14 @@
                                             </figure>
                                             <div class="clearfix w-100"></div>
                                             <h4 class="fw-700 font-xsss mt-3 mb-0">@string.Format("{0} {1}", user.FirstName, user.Lastname)</h4>
-                                            <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3">@string.Format("@{0}", user.Username)</p>
+                                            <p class="fw-500 font-xssss text-grey-500 mt-0 mb-3"><a href="/Home/Profile?id=@user.Id" class="text-decoration-none text-grey-500">@string.Format("@{0}", user.Username)</a></p>
                                             @if (user.IsFriend)
                                             {
-                                                <a href="/" class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">UNFOLLOW</a>
+                                                <a class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl font-xsssss fw-700 ls-lg text-white" style="background-color: #dc3545 !important;" onclick="UnFollow(this, @user.Id)">UNFOLLOW</a>
                                             }
                                             else
                                             {
-                                                <a class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white" onclick="AddFollow(this, @user.Id)">FOLLOW</a>
+                                                <a class="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl font-xsssss fw-700 ls-lg text-white" style="background-color: #28a745 !important;" onclick="Follow(this, @user.Id)">FOLLOW</a>
                                             }
                                         </div>
                                     </div>

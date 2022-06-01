@@ -9,7 +9,7 @@ using SocialNetwork.Social.Entities.Concrete;
 
 namespace SocialNetwork.DataAccess.Concrete
 {
-    public class EfRoomCloudDal : EfEntityRepositoryBase<RoomCloud, SocialContext>, IRoomCloudDal
+    public class EfMessageCloudDal : EfEntityRepositoryBase<MessageCloud, SocialContext>, IMessageCloudDal
     {
     }
 }
